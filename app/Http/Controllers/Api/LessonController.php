@@ -14,7 +14,7 @@ class LessonController extends Controller
     public function __construct(LessonService $lessonService)
     {
         $this->lessonService = $lessonService;
-        $this->middleware(['auth', 'role:admin'])->only(['store', 'update', 'destroy']);
+        $this->middleware(['auth:api', 'role:admin'])->only(['store', 'update', 'destroy']);
     }
 
     public function index(PaginationRequest $request){

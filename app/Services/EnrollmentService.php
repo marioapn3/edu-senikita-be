@@ -54,9 +54,10 @@ class EnrollmentService
         return true;
     }
 
-    public function store($course_id)
+    public function store($request)
     {
-        $user = auth()->user();
+        $user = $request->user();
+        $course_id = $request->course_id;
         $enrollment = Enrollment::where('user_id', $user->id)
             ->where('course_id', $course_id)
             ->first();
@@ -68,26 +69,8 @@ class EnrollmentService
             'course_id' => $course_id,
             'status' => 'enrolled',
         ]);
+
+        return $enrollment;
     }
 
-    public function update($id, $request)
-    {
-        $category = Enrollment::findOrFail($id);
-
-        $data = $request->only([
-            'name',
-            'description',
-            'status'
-        ]);
-
-        if ($request->hasFile('thumbnail')) {
-            if ($category->thumbnail) {
-                Storage::disk('public')->delete($category->thumbnail);
-            }
-            $data['thumbnail'] = $this->uploadService->upload($request->file('thumbnail'), 'categories');
-        }
-
-        $category->update($data);
-        return $category;
-    }
 }

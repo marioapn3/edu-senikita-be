@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CourseController;
+use App\Http\Controllers\Api\EnrollmentController;
 use App\Http\Controllers\Api\GoogleController;
 use App\Http\Controllers\Api\LessonController;
 use Illuminate\Http\Request;
@@ -12,7 +13,15 @@ use Laravel\Socialite\Facades\Socialite;
 
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+    return response()->json([
+        'success' => true,
+        'message' => 'User data retrieved successfully',
+        'data' => [
+            'user' => $request->user(),
+            'token' => $request->bearerToken(),
+        ]
+
+    ]);
 });
 
 Route::post('auth/login', [AuthController::class, 'login']);
@@ -41,4 +50,9 @@ $signature = base64_decode(strtr($tokenParts[2], '-_', '+/'));
 
 // Check the payload
 dd($header, $payload);
+});
+
+Route::controller(EnrollmentController::class)->group(function () {
+    Route::get('enrollments', 'index');
+    Route::post('enrollments', 'store');
 });
