@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('order');
             $table->string('title', 100);
             $table->string('slug')->unique();
-            $table->enum('type', ['lesson', 'quiz', 'final'])->default('text');
+            $table->enum('type', ['lesson', 'quiz', 'final'])->default('lesson');
             $table->text('description')->nullable();
             $table->text('content')->nullable();
             $table->text('video_url')->nullable();
