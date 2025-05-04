@@ -29,7 +29,7 @@ class LessonController extends Controller
     public function show($id){
         try {
             $data = $this->lessonService->getById($id);
-            return $this->successResponse($data, 'Category retrieved successfully');
+            return $this->successResponse($data, 'Lesson retrieved successfully');
         }catch (Exception $e) {
             return $this->exceptionError($e->getMessage());
         }
@@ -37,7 +37,7 @@ class LessonController extends Controller
     public function showByCourseId($course_id){
         try {
             $data = $this->lessonService->getByCourseId($course_id);
-            return $this->successResponse($data, 'Category retrieved successfully');
+            return $this->successResponse($data, 'Lesson retrieved successfully');
         }catch (Exception $e) {
             return $this->exceptionError($e->getMessage());
         }
@@ -45,7 +45,7 @@ class LessonController extends Controller
     public function showBySlug($slug){
         try {
             $data = $this->lessonService->getBySlug($slug);
-            return $this->successResponse($data, 'Category retrieved successfully');
+            return $this->successResponse($data, 'Lesson retrieved successfully');
         }catch (Exception $e) {
             return $this->exceptionError($e->getMessage());
         }
@@ -54,7 +54,7 @@ class LessonController extends Controller
     public function store(Request $request){
         try {
             $data = $this->lessonService->create($request);
-            return $this->successResponse($data, 'Category created successfully',201);
+            return $this->successResponse($data, 'Lesson created successfully',201);
         }catch (Exception $e) {
             return $this->exceptionError($e->getMessage());
         }
@@ -63,7 +63,7 @@ class LessonController extends Controller
     public function update(Request $request, $id){
         try {
             $data = $this->lessonService->update($request, $id);
-            return $this->successResponse($data, 'Category updated successfully');
+            return $this->successResponse($data, 'Lesson updated successfully');
         }catch (Exception $e) {
             return $this->exceptionError($e->getMessage());
         }
@@ -72,7 +72,7 @@ class LessonController extends Controller
     public function destroy($id){
         try {
             $this->lessonService->delete($id);
-            return $this->successResponse('', 'Category deleted successfully');
+            return $this->successResponse('', 'Lesson deleted successfully');
         }catch (Exception $e) {
             return $this->exceptionError($e->getMessage());
         }

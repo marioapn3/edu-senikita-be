@@ -66,6 +66,10 @@ class LessonService
             'video_url',
         ]);
 
+        if($this->checkOrderByCourseId($data['order'], $data['course_id'])) {
+            throw new \Exception('Order already exists for this course');
+        }
+
         $slug = Str::slug($data['title']);
         if(Lesson::where('slug', $slug)->exists()) {
             $slug = $slug . '-' . Str::random(5);
@@ -74,6 +78,14 @@ class LessonService
 
         $category = Lesson::create($data);
         return $category;
+    }
+
+    public function checkOrderByCourseId($order, $course_id){
+        $lesson = Lesson::where('course_id', $course_id)->where('order', $order)->first();
+        if ($lesson) {
+            return true;
+        }
+        return false;
     }
 
     public function update($id, $request)
