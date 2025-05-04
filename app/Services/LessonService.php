@@ -34,6 +34,10 @@ class LessonService
     {
         return Lesson::findOrFail($id);
     }
+    public function getByCourseId($id)
+    {
+        return Lesson::where('course_id', $id)->get();
+    }
     public function getBySlug($slug)
     {
         return Lesson::where('slug', $slug)->firstOrFail();

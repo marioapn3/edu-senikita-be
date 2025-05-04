@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('thumbnail')->nullable();
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->string('slug')->unique();
+            $table->integer('duration')->nullable(); // in minutes
+            $table->enum('level', ['pemula', 'menengah', 'lanjutan'])->default('pemula');
             $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
             $table->timestamps();
         });

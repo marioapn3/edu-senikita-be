@@ -25,3 +25,4 @@ Route::get('categories/slug/{slug}', [CategoryController::class, 'showBySlug']);
 
 Route::apiResource('lessons', LessonController::class);
 Route::get('lessons/slug/{slug}', [LessonController::class, 'showBySlug']);
+Route::get('course/lessons/{course_id}', [LessonController::class, 'showByCourseId']);

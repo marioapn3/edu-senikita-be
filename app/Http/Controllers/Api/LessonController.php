@@ -14,6 +14,7 @@ class LessonController extends Controller
     public function __construct(LessonService $lessonService)
     {
         $this->lessonService = $lessonService;
+        $this->middleware(['auth', 'role:admin'])->only(['store', 'update', 'destroy']);
     }
 
     public function index(PaginationRequest $request){
@@ -33,7 +34,14 @@ class LessonController extends Controller
             return $this->exceptionError($e->getMessage());
         }
     }
-    public function showByCourseId($id){}
+    public function showByCourseId($course_id){
+        try {
+            $data = $this->lessonService->getByCourseId($course_id);
+            return $this->successResponse($data, 'Category retrieved successfully');
+        }catch (Exception $e) {
+            return $this->exceptionError($e->getMessage());
+        }
+    }
     public function showBySlug($slug){
         try {
             $data = $this->lessonService->getBySlug($slug);
