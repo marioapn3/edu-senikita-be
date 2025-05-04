@@ -66,10 +66,11 @@ class GoogleController extends Controller
         try {
             $client = new Google_Client([
                 'client_id' => [
-                    env('GOOGLE_CLIENT_ID_ANDROID'),
                     env('GOOGLE_CLIENT_ID'),
+                    env('GOOGLE_CLIENT_ID_ANDROID'),
                 ]
             ]);
+
 
             $payload = $client->verifyIdToken($request->id_token);
 

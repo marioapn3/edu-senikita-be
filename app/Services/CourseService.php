@@ -51,7 +51,9 @@ class CourseService
             'title',
             'description',
             'category_id',
-            'status'
+            'status',
+            'level',
+            'duration',
         ]);
 
         if ($request->hasFile('thumbnail')) {

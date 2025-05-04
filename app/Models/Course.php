@@ -14,6 +14,8 @@ class Course extends Model
         'category_id',
         'slug',
         'status',
+        'duration',
+        'level',
     ];
 
     public function getThumbnailAttribute($value)
