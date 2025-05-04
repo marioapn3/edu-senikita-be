@@ -7,10 +7,8 @@ use Illuminate\Support\Facades\Storage;
 
 class UploadService
 {
-    public function uploadThumbnail(UploadedFile $file): string
+    public function upload(UploadedFile $file, $folder = 'default'): string
     {
-        $folder = 'thumbnails';
-
         // Gunakan hash nama file untuk menghindari duplikat nama
         $filename = $this->generateUniqueFilename($file);
 

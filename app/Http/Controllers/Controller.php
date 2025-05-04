@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
-abstract class Controller
+use Illuminate\Routing\Controller as BaseController;
+
+abstract class Controller extends BaseController
 {
-    public function exceptionError($e, $exception, $status = 400)
-    {
-        return response()->json([
-            'success' => false,
-            'message' => $e->getMessage(),
-            'errors' => $exception,
-        ], $status);
-    }
+    public function exceptionError($message, $errors = [], $status = 400)
+{
+    return response()->json([
+        'success' => false,
+        'message' => $message,
+        'errors' => $errors,
+    ], $status);
+}
+
 
 
     public function successResponse($data, $message = 'Success', $status = 200)

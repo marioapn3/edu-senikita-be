@@ -4,16 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Course extends Model
+class Category extends Model
 {
     protected $fillable = [
-        'title',
+        'name',
         'description',
-        'certificate_available',
         'thumbnail',
-        'category_id',
-        'slug',
         'status',
+        'slug',
     ];
 
     public function getThumbnailAttribute($value)
@@ -25,9 +23,8 @@ class Course extends Model
         return asset('storage/' . $value);
     }
 
-    public function category()
+    public function courses()
     {
-        return $this->belongsTo(Category::class, 'category_id', 'id');
+        return $this->hasMany(Course::class, 'category', 'id');
     }
-
 }

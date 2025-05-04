@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Course\StoreCourseRequest;
+use App\Http\Requests\Course\UpdateCourseRequest;
+use App\Http\Requests\Pagination\PaginationRequest;
+use App\Http\Resources\Course\ListCourseResource;
 use App\Models\Course;
 use App\Services\CourseService;
 use Illuminate\Http\Request;
@@ -15,103 +19,67 @@ class CourseController extends Controller
     public function __construct(CourseService $courseService)
     {
         $this->courseService = $courseService;
+        $this->middleware(['auth', 'role:admin'])->only(['store', 'update', 'destroy']);
+
     }
-    public function index(Request $request)
+    public function index(PaginationRequest $request)
     {
-        $validated = $request->validate([
-            'limit' => 'integer|min:1|max:100',
-            'search' => 'string|nullable',
-        ]);
-
-        $limit = $validated['limit'] ?? 10;
-        $search = $validated['search'] ?? null;
-
-        $courseQuery = Course::query();
-
-        if ($search) {
-            $courseQuery->where(function ($query) use ($search) {
-                $query->where('title', 'like', '%' . $search . '%')
-                    ->orWhere('description', 'like', '%' . $search . '%');
-            });
+        try {
+            $data = $this->courseService->getAll($request);
+            return $this->respond(new ListCourseResource($data));
+        } catch (\Exception $e) {
+            return $this->exceptionError($e,$e->getMessage() );
         }
-
-        $courses = $courseQuery->paginate($limit);
-
-        return $this->respond([
-            'data' => $courses->items(),
-              'meta' => [
-                'success' => true,
-                'message' => 'Success get List',
-                'pagination' => [
-                    'total' => $courses->total(),
-                    'per_page' => $courses->perPage(),
-                    'current_page' => $courses->currentPage(),
-                    'last_page' => $courses->lastPage(),
-                ],
-              ]
-        ]);
     }
 
-    public function store(Request $request)
+    public function store(StoreCourseRequest $request)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required',
-            'thumbnail' => 'nullable|image|max:2048', // max 2MB
-            'category' => 'required|string|max:100',
-            'status' => 'required|in:draft,published,archived'
-        ]);
-
-        $course = $this->courseService->create($validated);
-
-        return $this->successResponse(
-            $course,
-            'Course created successfully',
-            201
-        );
+        try {
+            $course = $this->courseService->create($request);
+            return $this->successResponse($course,'Course created successfully',201);
+        } catch (\Exception $e) {
+            return $this->exceptionError($e,$e->getMessage() );
+        }
     }
-
 
 
     public function show($id)
     {
-        $course = Course::findOrFail($id);
-
-        return  $this->successResponse(
-            $course,
-            'Course retrieved successfully'
-        );
+        try {
+            $course = $this->courseService->getById($id);
+            return $this->successResponse($course,'Course retrieved successfully');
+        } catch (\Exception $e) {
+            return $this->exceptionError($e,$e->getMessage() );
+        }
     }
 
-    public function update(Request $request, $id)
+    public function showBySlug($slug)
     {
-        $course = Course::findOrFail($id);
+        try {
+            $course = $this->courseService->getBySlug($slug);
+            return $this->successResponse($course,'Course retrieved successfully');
+        } catch (\Exception $e) {
+            return $this->exceptionError($e,$e->getMessage() );
+        }
+    }
 
-        $validated = $request->validate([
-            'title' => 'sometimes|required|string|max:255',
-            'description' => 'sometimes|required',
-            'certificate_available' => 'sometimes|required|boolean',
-            'thumbnail' => 'nullable|image|max:2048',
-            'category' => 'sometimes|required|string|max:100',
-            'status' => 'sometimes|required|in:draft,published,archived'
-        ]);
-
-        $course = $this->courseService->update($course, $validated);
-
-        return $this->successResponse(
-            $course,
-            'Course updated successfully'
-        );
+    public function update(UpdateCourseRequest $request, $id)
+    {
+       try {
+            $course = $this->courseService->update($id, $request);
+            return $this->successResponse($course,'Course updated successfully');
+        } catch (\Exception $e) {
+            return $this->exceptionError($e,$e->getMessage() );
+        }
     }
 
     public function destroy($id)
     {
-        $course = Course::findOrFail($id);
-        $course->delete();
-
-        return $this->successResponse(
-            null,
-            'Course deleted successfully'
-        );
+        try {
+            $this->courseService->delete($id);
+            return $this->successResponse(null,'Course deleted successfully');
+        } catch (\Exception $e) {
+            return $this->exceptionError($e,$e->getMessage() );
+        }
     }
 }
