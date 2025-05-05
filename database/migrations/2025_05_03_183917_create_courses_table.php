@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('duration')->nullable(); // in minutes
             $table->enum('level', ['pemula', 'menengah', 'lanjutan'])->default('pemula');
             $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
+            $table->foreignId('instructor_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

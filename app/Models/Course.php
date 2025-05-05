@@ -16,6 +16,7 @@ class Course extends Model
         'status',
         'duration',
         'level',
+        'instructor_id',
     ];
 
     public function getThumbnailAttribute($value)
@@ -30,6 +31,10 @@ class Course extends Model
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id', 'id');
+    }
+
+    public function instructor(){
+        return $this->belongsTo(Instructor::class, 'instructor_id', 'id');
     }
 
 }

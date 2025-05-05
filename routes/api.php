@@ -20,7 +20,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
             'user' => $request->user(),
             'token' => $request->bearerToken(),
         ]
-
     ]);
 });
 
@@ -32,7 +31,12 @@ Route::post('auth/google/verify-code-v2', [GoogleController::class, 'verifyGoogl
 
 Route::apiResource('courses', CourseController::class);
 Route::get('courses/slug/{slug}', [CourseController::class, 'showBySlug']);
-Route::apiResource('categories', CategoryController::class);
+
+Route::get('categories', [CategoryController::class, 'index']);
+Route::post('categories', [CategoryController::class, 'store']);
+Route::get('categories/{id}', [CategoryController::class, 'show']);
+Route::post('categories/{id}', [CategoryController::class, 'update']);
+Route::delete('categories/{id}', [CategoryController::class, 'destroy']);
 Route::get('categories/slug/{slug}', [CategoryController::class, 'showBySlug']);
 
 Route::apiResource('lessons', LessonController::class);

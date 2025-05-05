@@ -56,7 +56,7 @@ class CategoryController extends Controller
 
     public function update(StoreCategoryRequest $request, $id){
         try {
-            $data = $this->categoryService->update($request, $id);
+            $data = $this->categoryService->update($id, $request);
             return $this->successResponse($data, 'Category updated successfully');
         }catch (Exception $e) {
             return $this->exceptionError($e->getMessage());

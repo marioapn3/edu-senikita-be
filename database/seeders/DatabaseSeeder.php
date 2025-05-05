@@ -20,5 +20,11 @@ class DatabaseSeeder extends Seeder
             'google_id' => null,
             'role' => 'admin',
         ]);
+        $this->call([
+            InstructorSeeder::class,
+            CategorySeeder::class,
+            CourseSeeder::class,
+
+        ]);
     }
 }

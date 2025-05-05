@@ -35,6 +35,11 @@ class ListCourseResource extends ResourceCollection
                 'name' => $data->category->name,
                 'slug' => $data->category->slug,
             ],
+            'instructor' => [
+                'id' => $data->instructor->id,
+                'name' => $data->instructor->name,
+                'photo' => $data->instructor->photo,
+            ],
         ];
     }
 
