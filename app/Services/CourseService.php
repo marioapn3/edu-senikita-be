@@ -18,11 +18,16 @@ class CourseService
     public function getAll($request){
         $limit = $request->input('limit', 10);
         $search = $request->input('search', null);
+        $category_id = $request->input('category_id', null);
 
         $query = Course::query();
 
         if ($search) {
             $query->where('title', 'like', '%' . $search . '%');
+        }
+
+        if ($category_id) {
+            $query->where('category_id', $category_id);
         }
 
         return $query->paginate($limit);
