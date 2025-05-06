@@ -41,4 +41,14 @@ class EnrollmentController extends Controller
         }
     }
 
+    public function destroy($id)
+    {
+        try {
+            $this->enrollmentService->delete($id);
+            return $this->successResponse([], 'Enrollment deleted successfully');
+        } catch (Exception $e) {
+            return $this->exceptionError($e->getMessage());
+        }
+    }
+
 }

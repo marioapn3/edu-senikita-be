@@ -44,13 +44,8 @@ class EnrollmentService
     }
     public function delete($id)
     {
-        $category = Enrollment::findOrFail($id);
-
-        if ($category->thumbnail) {
-            Storage::disk('public')->delete($category->thumbnail);
-        }
-
-        $category->delete();
+        $enrollment = Enrollment::findOrFail($id);
+        $enrollment->delete();
         return true;
     }
 

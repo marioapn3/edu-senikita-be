@@ -59,4 +59,5 @@ dd($header, $payload);
 Route::controller(EnrollmentController::class)->group(function () {
     Route::get('enrollments', 'index');
     Route::post('enrollments', 'store');
+    Route::delete('enrollments/{id}', 'destroy');
 });
