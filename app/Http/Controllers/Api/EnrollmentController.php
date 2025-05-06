@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Enrollment\StoreEnrollmentRequest;
+use App\Http\Resources\Enrollment\ListEnrollmentResource;
 use App\Services\EnrollmentService;
 use Exception;
 use Google\Service\AccessApproval\EnrolledService;
@@ -24,7 +25,7 @@ class EnrollmentController extends Controller
     {
         try {
             $data = $this->enrollmentService->getAll($request);
-            return $this->respond($data);
+            return $this->respond(new ListEnrollmentResource($data));
         } catch (Exception $e) {
             return $this->exceptionError($e->getMessage());
         }
