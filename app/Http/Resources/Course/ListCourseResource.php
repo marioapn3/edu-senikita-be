@@ -44,6 +44,8 @@ class ListCourseResource extends ResourceCollection
             'enrolled_count' => $data->enrollments->count(),
             'rating' => $data->ratings->avg('rating') ? (float)$data->ratings->avg('rating') : 0,
             "lessons_count" => $data->lessons->count(),
+            "created_at" => $data->created_at->format('Y-m-d H:i:s'),
+            "updated_at" => $data->updated_at->format('Y-m-d H:i:s'),
         ];
     }
 
