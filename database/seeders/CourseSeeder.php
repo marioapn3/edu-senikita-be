@@ -24,7 +24,6 @@ class CourseSeeder extends Seeder
                 'certificate_available' => true,
                 'thumbnail' => null,
                 'slug' => 'dasar-dasar-piano-untuk-pemula',
-                'duration' => 1800, // 30 jam
                 'level' => 'pemula',
                 'status' => 'published',
                 'instructor_id' => 1, // Sesuaikan dengan ID instructor yang sudah ada
@@ -37,7 +36,6 @@ class CourseSeeder extends Seeder
                 'certificate_available' => true,
                 'thumbnail' => null,
                 'slug' => 'teknik-vokal-intermediate',
-                'duration' => 2400, // 40 jam
                 'level' => 'menengah',
                 'status' => 'published',
                 'instructor_id' => 2, // Sesuaikan dengan ID instructor yang sudah ada
@@ -50,7 +48,6 @@ class CourseSeeder extends Seeder
                 'certificate_available' => true,
                 'thumbnail' => null,
                 'slug' => 'master-gitar-klasik',
-                'duration' => 3600, // 60 jam
                 'level' => 'lanjutan',
                 'status' => 'draft',
                 'instructor_id' => 3, // Sesuaikan dengan ID instructor yang sudah ada

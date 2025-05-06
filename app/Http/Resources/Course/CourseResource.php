@@ -31,7 +31,7 @@ class CourseResource extends JsonResource
                 'photo' => $this->instructor->photo,
                 'expertise' => $this->instructor->expertise,
             ],
-            'duration' => $this->duration,
+            'duration' => $this->lessons->sum('duration') ? $this->lessons->sum('duration') . ' menit' : '0 menit',
             'level' => $this->level,
             'sneakpeeks' => $this->sneakpeeks->map(function ($sneakpeek) {
                 return $sneakpeek->text;
@@ -40,6 +40,8 @@ class CourseResource extends JsonResource
                 return $requirement->text;
             })->toArray(),
             'ratings' => $this->ratings->avg('rating') ? (float)$this->ratings->avg('rating') : 0,
+            "enrolled_count" => $this->enrollments->count(),
+            "lessons_count" => $this->lessons->count(),
         ];
     }
 

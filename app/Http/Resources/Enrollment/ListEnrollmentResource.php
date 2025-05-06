@@ -38,7 +38,7 @@ class ListEnrollmentResource extends ResourceCollection
                 'slug' => $data->course->slug,
                 'status' => $data->course->status,
                 'thumbnail' => $data->course->thumbnail,
-                'duration' => $data->course->duration,
+                'duration' => $data->course->lessons->sum('duration') ? $data->course->lessons->sum('duration') . ' menit' : '0 menit',
                 'level' => $data->course->level,
                 'category' => [
                     'id' => $data->course->category->id,

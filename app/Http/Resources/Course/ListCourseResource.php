@@ -39,10 +39,11 @@ class ListCourseResource extends ResourceCollection
                 'photo' => $data->instructor->photo,
                 'expertise' => $data->instructor->expertise,
             ],
-            'duration' => $data->duration,
+            'duration' => $data->lessons->sum('duration') ? $data->lessons->sum('duration') . ' menit' : '0 menit',
             'level' => $data->level,
             'enrolled_count' => $data->enrollments->count(),
             'rating' => $data->ratings->avg('rating') ? (float)$data->ratings->avg('rating') : 0,
+            "lessons_count" => $data->lessons->count(),
         ];
     }
 

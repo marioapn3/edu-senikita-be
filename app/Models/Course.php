@@ -13,7 +13,6 @@ class Course extends Model
         'thumbnail',
         'slug',
         'status',
-        'duration',
         'level',
         'instructor_id',
     ];
@@ -56,6 +55,10 @@ class Course extends Model
     public function ratings()
     {
         return $this->hasMany(CourseRating::class);
+    }
+
+    public function lessons(){
+        return $this->hasMany(Lesson::class);
     }
 
 }

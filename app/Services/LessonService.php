@@ -64,6 +64,7 @@ class LessonService
             'description',
             'content',
             'video_url',
+            'duration',
         ]);
 
         if($this->checkOrderByCourseId($data['order'], $data['course_id'])) {
