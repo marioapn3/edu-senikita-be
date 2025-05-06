@@ -49,6 +49,7 @@ class ListEnrollmentResource extends ResourceCollection
                     'id' => $data->course->instructor->id,
                     'name' => $data->course->instructor->name,
                     'photo' => $data->course->instructor->photo,
+                    'expertise' => $data->course->instructor->expertise,
                 ],
             ],
         ];

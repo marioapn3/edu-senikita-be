@@ -22,6 +22,8 @@ class CourseService
 
         $query = Course::query();
 
+        $query->where('status', 'published');
+
         if ($search) {
             $query->where('title', 'like', '%' . $search . '%');
         }
@@ -35,7 +37,7 @@ class CourseService
 
     public function getById($id)
     {
-        return Course::findOrFail($id)->with('instructor', 'category')->first();
+        return Course::findOrFail($id)->with('instructor')->first();
     }
 
     public function delete($id)
@@ -76,7 +78,7 @@ class CourseService
 
     public function getBySlug($slug = null)
     {
-        return Course::where('slug', $slug)->first();
+        return Course::where('slug', $slug)->with('instructor')->first();
     }
 
     public function update($id, $request): Course

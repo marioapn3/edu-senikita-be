@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CourseController;
+use App\Http\Controllers\Api\CourseRatingController;
 use App\Http\Controllers\Api\EnrollmentController;
 use App\Http\Controllers\Api\GoogleController;
 use App\Http\Controllers\Api\LessonController;
@@ -60,4 +61,8 @@ Route::controller(EnrollmentController::class)->group(function () {
     Route::get('enrollments', 'index');
     Route::post('enrollments', 'store');
     Route::delete('enrollments/{id}', 'destroy');
+});
+
+Route::controller(CourseRatingController::class)->group(function () {
+    Route::post('course-ratings', 'store');
 });

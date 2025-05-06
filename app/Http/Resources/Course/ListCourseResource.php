@@ -30,18 +30,19 @@ class ListCourseResource extends ResourceCollection
             'slug' => $data->slug,
             'status' => $data->status,
             'thumbnail' => $data->thumbnail,
-            'category' => [
-                'id' => $data->category->id,
-                'name' => $data->category->name,
-                'slug' => $data->category->slug,
-            ],
+            'category' => $data->categories->map(function ($category) {
+                return $category->name;
+            })->toArray(),
             'instructor' => [
                 'id' => $data->instructor->id,
                 'name' => $data->instructor->name,
                 'photo' => $data->instructor->photo,
+                'expertise' => $data->instructor->expertise,
             ],
             'duration' => $data->duration,
             'level' => $data->level,
+            'enrolled_count' => $data->enrollments->count(),
+            'rating' => $data->ratings->avg('rating') ? (float)$data->ratings->avg('rating') : 0,
         ];
     }
 

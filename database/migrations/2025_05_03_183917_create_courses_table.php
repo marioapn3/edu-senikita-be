@@ -17,7 +17,6 @@ return new class extends Migration
             $table->text('description');
             $table->boolean('certificate_available')->default(false);
             $table->string('thumbnail')->nullable();
-            $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->string('slug')->unique();
             $table->integer('duration')->nullable(); // in minutes
             $table->enum('level', ['pemula', 'menengah', 'lanjutan'])->default('pemula');

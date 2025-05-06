@@ -17,7 +17,7 @@ class InstructorSeeder extends Seeder
         $instructors = [
             [
                 'name' => 'John Doe',
-                'description' => 'Seorang instruktur berpengalaman dalam bidang musik klasik dengan pengalaman mengajar lebih dari 10 tahun.',
+                'expertise' => 'Seorang instruktur berpengalaman dalam bidang musik klasik dengan pengalaman mengajar lebih dari 10 tahun.',
                 'email' => 'john.doe@example.com',
                 'phone' => '081234567890',
                 'created_at' => now(),
@@ -25,7 +25,7 @@ class InstructorSeeder extends Seeder
             ],
             [
                 'name' => 'Jane Smith',
-                'description' => 'Instruktur profesional dengan spesialisasi dalam piano dan vokal, lulusan Conservatory of Music.',
+                'expertise' => 'Instruktur profesional dengan spesialisasi dalam piano dan vokal, lulusan Conservatory of Music.',
                 'email' => 'jane.smith@example.com',
                 'phone' => '081234567891',
                 'created_at' => now(),
@@ -33,7 +33,7 @@ class InstructorSeeder extends Seeder
             ],
             [
                 'name' => 'Ahmad Rizki',
-                'description' => 'Instruktur gitar dengan pengalaman mengajar 5 tahun, spesialis dalam genre rock dan jazz.',
+                'expertise' => 'Instruktur gitar dengan pengalaman mengajar 5 tahun, spesialis dalam genre rock dan jazz.',
                 'email' => 'ahmad.rizki@example.com',
                 'phone' => '081234567892',
                 'created_at' => now(),

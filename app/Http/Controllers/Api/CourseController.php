@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Course\StoreCourseRequest;
 use App\Http\Requests\Course\UpdateCourseRequest;
 use App\Http\Requests\Pagination\PaginationRequest;
+use App\Http\Resources\Course\CourseResource;
 use App\Http\Resources\Course\ListCourseResource;
 use App\Models\Course;
 use App\Services\CourseService;
@@ -47,7 +48,7 @@ class CourseController extends Controller
     {
         try {
             $course = $this->courseService->getById($id);
-            return $this->successResponse($course,'Course retrieved successfully');
+            return $this->successResponse(new CourseResource($course),'Course retrieved successfully');
         } catch (\Exception $e) {
             return $this->exceptionError($e,$e->getMessage() );
         }
@@ -57,7 +58,7 @@ class CourseController extends Controller
     {
         try {
             $course = $this->courseService->getBySlug($slug);
-            return $this->successResponse($course,'Course retrieved successfully');
+            return $this->successResponse(new CourseResource($course),'Course retrieved successfully');
         } catch (\Exception $e) {
             return $this->exceptionError($e,$e->getMessage() );
         }

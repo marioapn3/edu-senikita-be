@@ -11,7 +11,6 @@ class Course extends Model
         'description',
         'certificate_available',
         'thumbnail',
-        'category_id',
         'slug',
         'status',
         'duration',
@@ -28,13 +27,35 @@ class Course extends Model
         return asset('storage/' . $value);
     }
 
-    public function category()
+    public function categories()
     {
-        return $this->belongsTo(Category::class, 'category_id', 'id');
+        return $this->belongsToMany(Category::class);
     }
 
-    public function instructor(){
+    public function enrollments()
+    {
+        return $this->hasMany(Enrollment::class);
+    }
+
+
+    public function instructor()
+    {
         return $this->belongsTo(Instructor::class, 'instructor_id', 'id');
+    }
+
+    public function sneakpeeks()
+    {
+        return $this->hasMany(SneakPeek::class);
+    }
+
+    public function requirements()
+    {
+        return $this->hasMany(Requirement::class);
+    }
+
+    public function ratings()
+    {
+        return $this->hasMany(CourseRating::class);
     }
 
 }
