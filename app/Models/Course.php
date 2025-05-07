@@ -15,6 +15,7 @@ class Course extends Model
         'status',
         'level',
         'instructor_id',
+        'preview_video',
     ];
 
     public function getThumbnailAttribute($value)

@@ -63,6 +63,8 @@ class CourseService
             'status',
             'level',
             'duration',
+            'certificate_available',
+            'preview_video',
         ]);
 
         if ($request->hasFile('thumbnail')) {
@@ -92,7 +94,8 @@ class CourseService
             'thumbnail',
             'category_id',
             'status',
-            'certificate_available'
+            'certificate_available',
+            'preview_video',
         ]);
 
         if ($request->hasFile('thumbnail')) {
