@@ -40,11 +40,9 @@ class ListEnrollmentResource extends ResourceCollection
                 'thumbnail' => $data->course->thumbnail,
                 'duration' => $data->course->lessons->sum('duration') ? $data->course->lessons->sum('duration') . ' menit' : '0 menit',
                 'level' => $data->course->level,
-                'category' => [
-                    'id' => $data->course->category->id,
-                    'name' => $data->course->category->name,
-                    'slug' => $data->course->category->slug,
-                ],
+                'category' => $data->course->categories->map(function ($category) {
+                return $category->name;
+            })->toArray(),
                 'instructor' => [
                     'id' => $data->course->instructor->id,
                     'name' => $data->course->instructor->name,
