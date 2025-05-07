@@ -39,7 +39,7 @@ class CourseService
 
     public function getById($id)
     {
-        return Course::findOrFail($id)->with('instructor')->first();
+        return Course::findOrFail($id);
     }
 
     public function delete($id)
