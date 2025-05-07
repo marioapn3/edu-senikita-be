@@ -17,7 +17,7 @@ class EnrollmentController extends Controller
     public function __construct(EnrollmentService $enrollmentService)
     {
         $this->enrollmentService = $enrollmentService;
-        $this->middleware(['auth:api', 'role:user'])->only(['index','store']);
+        $this->middleware(['auth:api', 'role:user'])->only(['index','store','getTotalCourse']);
     }
 
 
@@ -46,6 +46,16 @@ class EnrollmentController extends Controller
         try {
             $this->enrollmentService->delete($id);
             return $this->successResponse([], 'Enrollment deleted successfully');
+        } catch (Exception $e) {
+            return $this->exceptionError($e->getMessage());
+        }
+    }
+
+    public function getTotalCourse(Request $request)
+    {
+        try {
+            $data = $this->enrollmentService->getTotalCourse($request);
+            return $this->successResponse($data, 'Total course retrieved successfully');
         } catch (Exception $e) {
             return $this->exceptionError($e->getMessage());
         }

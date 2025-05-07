@@ -15,7 +15,12 @@ class EnrollmentService
     {
         $limit = $request->input('limit', 10);
         $search = $request->input('search', null);
+        $status = $request->input('status', null);
         $user = $request->user();
+
+        if ($status && !in_array($status, ['enrolled', 'on going', 'completed'])) {
+            throw new Exception('Invalid status. Status must be one of: enrolled, on going, completed');
+        }
 
         $query = Enrollment::with(['course', 'course.lessons']);
 
@@ -23,6 +28,10 @@ class EnrollmentService
             $query->whereHas('course', function ($q) use ($search) {
                 $q->where('title', 'like', '%' . $search . '%');
             });
+        }
+
+        if ($status) {
+            $query->where('status', $status);
         }
 
         if($user){
@@ -85,6 +94,17 @@ class EnrollmentService
         ]);
 
         return $enrollment;
+    }
+    public function getTotalCourse($request){
+        $user = $request->user();
+        $enrollments = Enrollment::where('user_id', $user->id)->get();
+        $total_course = $enrollments->count();
+        $total_course_completed = $enrollments->where('status', 'completed')->count();
+        return [
+            'total_course' => $total_course,
+            'total_course_completed' => $total_course_completed,
+            'total_course_on_going' => $total_course - $total_course_completed,
+        ];
     }
 
 }
