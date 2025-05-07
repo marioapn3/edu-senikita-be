@@ -100,10 +100,11 @@ class EnrollmentService
         $enrollments = Enrollment::where('user_id', $user->id)->get();
         $total_course = $enrollments->count();
         $total_course_completed = $enrollments->where('status', 'completed')->count();
+        $total_course_on_going = $enrollments->where('status', 'on going')->count();
         return [
             'total_course' => $total_course,
             'total_course_completed' => $total_course_completed,
-            'total_course_on_going' => $total_course - $total_course_completed,
+            'total_course_on_going' => $total_course_on_going
         ];
     }
 
