@@ -15,6 +15,7 @@ class LessonController extends Controller
     {
         $this->lessonService = $lessonService;
         $this->middleware(['auth:api', 'role:admin'])->only(['store', 'update', 'destroy']);
+        $this->middleware(['auth:api'])->only(['showByCourseId', 'completeLesson']);
     }
 
     public function index(PaginationRequest $request){
@@ -34,9 +35,9 @@ class LessonController extends Controller
             return $this->exceptionError($e->getMessage());
         }
     }
-    public function showByCourseId($course_id){
+    public function showByCourseId(Request $request,$course_id){
         try {
-            $data = $this->lessonService->getByCourseId($course_id);
+            $data = $this->lessonService->getByCourseId($course_id, $request);
             return $this->successResponse($data, 'Lesson retrieved successfully');
         }catch (Exception $e) {
             return $this->exceptionError($e->getMessage());
@@ -73,6 +74,15 @@ class LessonController extends Controller
         try {
             $this->lessonService->delete($id);
             return $this->successResponse('', 'Lesson deleted successfully');
+        }catch (Exception $e) {
+            return $this->exceptionError($e->getMessage());
+        }
+    }
+
+    public function completeLesson(Request $request, $lesson_id){
+        try {
+            $data = $this->lessonService->completeLesson($lesson_id, $request->user()->id);
+            return $this->successResponse($data, 'Lesson completed successfully');
         }catch (Exception $e) {
             return $this->exceptionError($e->getMessage());
         }

@@ -17,7 +17,7 @@ class EnrollmentService
         $search = $request->input('search', null);
         $user = $request->user();
 
-        $query = Enrollment::with('course');
+        $query = Enrollment::with(['course', 'course.lessons']);
 
         if ($search) {
             $query->whereHas('course', function ($q) use ($search) {
@@ -31,7 +31,26 @@ class EnrollmentService
             }
         }
 
-        return $query->paginate($limit);
+        $enrollments = $query->paginate($limit);
+
+        // Add completion statistics for each enrollment
+        $enrollments->getCollection()->transform(function ($enrollment) use ($user) {
+            $totalLessons = $enrollment->course->lessons->count();
+            $completedLessons = $enrollment->course->lessons->filter(function ($lesson) use ($user) {
+                return $lesson->users->contains('id', $user->id) &&
+                       $lesson->users->firstWhere('id', $user->id)->pivot->is_completed;
+            })->count();
+
+            $enrollment->completion_stats = [
+                'total_lessons' => $totalLessons,
+                'completed_lessons' => $completedLessons,
+                'completion_percentage' => $totalLessons > 0 ? round(($completedLessons / $totalLessons) * 100, 2) : 0
+            ];
+
+            return $enrollment;
+        });
+
+        return $enrollments;
     }
 
     public function getById($id)

@@ -25,6 +25,9 @@ class User extends Authenticatable implements JWTSubject
         'google_id',
         'photo',
         'role',
+        'bio',
+        'region',
+        'preferensi',
     ];
 
     /**
@@ -64,4 +67,12 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    public function completedLessons()
+{
+    return $this->belongsToMany(Lesson::class)
+                ->withPivot('is_completed', 'completed_at')
+                ->withTimestamps();
+}
+
 }

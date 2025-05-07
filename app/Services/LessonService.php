@@ -34,9 +34,34 @@ class LessonService
     {
         return Lesson::findOrFail($id);
     }
-    public function getByCourseId($id)
+    public function getByCourseId($id, $request)
     {
-        return Lesson::where('course_id', $id)->get();
+        $userId = $request->user()->id;
+        $lessons = Lesson::where('course_id', $id)
+            ->with(['users' => function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            }])
+            ->get()
+            ->map(function ($lesson) use ($userId) {
+                $completed = $lesson->users->first() ? $lesson->users->first()->pivot->is_completed : false;
+                return [
+                    'id' => $lesson->id,
+                    'title' => $lesson->title,
+                    'is_completed' => $completed ? true : false,
+                    'slug' => $lesson->slug,
+                    'order' => $lesson->order,
+                    'type' => $lesson->type,
+                    'description' => $lesson->description,
+                    'content' => $lesson->content,
+                    'video_url' => $lesson->video_url,
+                    'duration' => $lesson->duration,
+                    'created_at' => $lesson->created_at,
+                    'updated_at' => $lesson->updated_at,
+                    'completed_at' => $lesson->users->first() ? $lesson->users->first()->pivot->completed_at : null,
+                ];
+            });
+
+        return $lessons;
     }
     public function getBySlug($slug)
     {
@@ -106,5 +131,13 @@ class LessonService
 
         $category->update($data);
         return $category;
+    }
+
+    public function completeLesson($lessonId, $userId)
+    {
+        $lesson = Lesson::findOrFail($lessonId);
+        $lesson->users()->attach($userId, ['is_completed' => true, 'completed_at' => now()]);
+
+        return $lesson;
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -31,5 +32,22 @@ class AuthController extends Controller
         $user->token = $token;
 
         return $this->successResponse($user, 'Login successful');
+    }
+
+    public function updateOnboarding(Request $request){
+        $request->validate([
+            'bio' => 'required|string',
+            'region' => 'required|string',
+            'preferensi' => 'required|string',
+        ]);
+
+        $user = User::find(Auth::user()->id);
+        $user->update([
+            'bio' => $request->bio,
+            'region' => $request->region,
+            'preferensi' => $request->preferensi,
+        ]);
+
+        return $this->successResponse($user, 'Onboarding updated successfully');
     }
 }

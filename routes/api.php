@@ -25,6 +25,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('auth/login', [AuthController::class, 'login']);
+Route::middleware('auth:api')->post('auth/onboarding', [AuthController::class, 'updateOnboarding']);
+
 Route::get('auth/google', [GoogleController::class, 'redirectToProvider']);
 Route::get('auth/google/callback', [GoogleController::class, 'handleProvideCallback']);
 Route::post('auth/google/verify-code', [GoogleController::class, 'verifyGoogleToken']);
@@ -42,6 +44,7 @@ Route::get('categories/slug/{slug}', [CategoryController::class, 'showBySlug']);
 
 Route::apiResource('lessons', LessonController::class);
 Route::get('lessons/slug/{slug}', [LessonController::class, 'showBySlug']);
+Route::post('lessons/{lesson_id}/complete', [LessonController::class, 'completeLesson']);   
 Route::get('course/lessons/{course_id}', [LessonController::class, 'showByCourseId']);
 
 Route::get('debug-playground', function(){

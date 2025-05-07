@@ -30,6 +30,7 @@ class ListEnrollmentResource extends ResourceCollection
             'completed_at' => $data->completed_at,
             'created_at' => $data->created_at,
             'updated_at' => $data->updated_at,
+            'completion_stats' => $data->completion_stats,
             'course' => [
                 'id' => $data->course->id,
                 'title' => $data->course->title,
