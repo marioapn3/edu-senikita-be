@@ -46,6 +46,7 @@ class ListCourseResource extends ResourceCollection
             "lessons_count" => $data->lessons->count(),
             "created_at" => $data->created_at->format('Y-m-d H:i:s'),
             "updated_at" => $data->updated_at->format('Y-m-d H:i:s'),
+            'is_enrolled' => $data->is_enrolled ?? false,
         ];
     }
 

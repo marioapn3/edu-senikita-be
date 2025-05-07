@@ -75,4 +75,9 @@ class User extends Authenticatable implements JWTSubject
                 ->withTimestamps();
 }
 
+    public function enrollments()
+    {
+        return $this->hasMany(Enrollment::class);
+    }
+
 }
