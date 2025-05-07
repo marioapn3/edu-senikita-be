@@ -29,7 +29,9 @@ class CourseService
         }
 
         if ($category_id) {
-            $query->where('category_id', $category_id);
+            $query->whereHas('categories', function ($q) use ($category_id) {
+                $q->where('category_id', $category_id);
+            });
         }
 
         return $query->paginate($limit);
