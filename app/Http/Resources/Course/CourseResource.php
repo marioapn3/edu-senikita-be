@@ -42,6 +42,7 @@ class CourseResource extends JsonResource
             'ratings' => $this->ratings->avg('rating') ? (float)$this->ratings->avg('rating') : 0,
             "enrolled_count" => $this->enrollments->count(),
             "lessons_count" => $this->lessons->count(),
+            "is_enrolled" => $this->is_enrolled ?? false,
             "created_at" => $this->created_at->format('Y-m-d H:i:s'),
             "updated_at" => $this->updated_at->format('Y-m-d H:i:s'),
         ];

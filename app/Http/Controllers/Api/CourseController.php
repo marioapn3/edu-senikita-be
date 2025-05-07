@@ -44,20 +44,20 @@ class CourseController extends Controller
     }
 
 
-    public function show($id)
+    public function show(Request $request, $id)
     {
         try {
-            $course = $this->courseService->getById($id);
+            $course = $this->courseService->getById($id, $request);
             return $this->successResponse(new CourseResource($course),'Course retrieved successfully');
         } catch (\Exception $e) {
             return $this->exceptionError($e,$e->getMessage() );
         }
     }
 
-    public function showBySlug($slug)
+    public function showBySlug(Request $request, $slug)
     {
         try {
-            $course = $this->courseService->getBySlug($slug);
+            $course = $this->courseService->getBySlug($slug, $request);
             return $this->successResponse(new CourseResource($course),'Course retrieved successfully');
         } catch (\Exception $e) {
             return $this->exceptionError($e,$e->getMessage() );

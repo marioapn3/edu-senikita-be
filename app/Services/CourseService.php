@@ -61,9 +61,24 @@ class CourseService
         return $courses;
     }
 
-    public function getById($id)
+    public function getById($id, $request)
     {
-        return Course::findOrFail($id);
+        $course = Course::findOrFail($id);
+
+        if ($request->bearerToken()) {
+            try {
+                $token = $request->bearerToken();
+                $payload = JWT::decode($token, new Key(env('JWT_SECRET'), 'HS256'));
+                $user = User::find($payload->sub);
+                if ($user) {
+                    $enrolledCourseIds = $user->enrollments()->pluck('course_id')->toArray();
+                    $course->is_enrolled = in_array($course->id, $enrolledCourseIds);
+                }
+            } catch (\Exception $e) {
+                // If token is invalid, continue without enrollment info
+            }
+        }
+        return $course;
     }
 
     public function delete($id)
@@ -104,9 +119,21 @@ class CourseService
         return Course::create($data);
     }
 
-    public function getBySlug($slug = null)
+    public function getBySlug($slug , $request)
     {
-        return Course::where('slug', $slug)->with('instructor')->first();
+        $course = Course::where('slug', $slug)->first();
+        if ($request->bearerToken()) {
+            try {
+                $token = $request->bearerToken();
+                $payload = JWT::decode($token, new Key(env('JWT_SECRET'), 'HS256'));
+                $user = User::find($payload->sub);
+                $enrolledCourseIds = $user->enrollments()->pluck('course_id')->toArray();
+                $course->is_enrolled = in_array($course->id, $enrolledCourseIds);
+            } catch (\Exception $e) {
+                // If token is invalid, continue without enrollment info
+            }
+        }
+        return $course;
     }
 
     public function update($id, $request): Course
