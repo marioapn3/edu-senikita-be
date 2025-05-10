@@ -5,17 +5,20 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Services\CourseService;
 use App\Services\LessonService;
+use App\Services\QuizService;
 use Illuminate\Http\Request;
 
 class LessonController extends Controller
 {
     protected $lessonService;
     protected $courseService;
+    protected $quizService;
 
-    public function __construct(LessonService $lessonService, CourseService $courseService)
+    public function __construct(LessonService $lessonService, CourseService $courseService, QuizService $quizService)
     {
         $this->lessonService = $lessonService;
         $this->courseService = $courseService;
+        $this->quizService = $quizService;
     }
 
     public function index($courseId, Request $request)
@@ -61,6 +64,7 @@ class LessonController extends Controller
     public function show($courseId, $slug)
     {
         $lesson = $this->lessonService->getBySlug($slug);
-        return view('pages.dashboard.lessons.show', compact('lesson', 'courseId'));
+        $quiz = $this->quizService->getQuizByLessonId($lesson->id);
+        return view('pages.dashboard.lessons.show', compact('lesson', 'courseId', 'quiz'));
     }
 }

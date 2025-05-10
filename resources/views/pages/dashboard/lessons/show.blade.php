@@ -59,6 +59,117 @@
                             </div>
                         </div>
                         @endif
+
+                        @if($lesson->type == 'quiz')
+                        <div class="bg-white border border-gray-100 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center">
+                                    <i class="fas fa-question-circle text-indigo-600 mr-2"></i>
+                                    <h5 class="text-lg font-semibold text-gray-900">Quiz</h5>
+                                </div>
+                                @if(isset($quiz))
+                                <button type="button"
+                                        onclick="openCreateQuestionModal()"
+                                        class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors duration-200">
+                                    <i class="fas fa-plus mr-2"></i> Add Question
+                                </button>
+                                @endif
+                            </div>
+
+                            @if(isset($quiz) && isset($quiz->questions) && count($quiz->questions) > 0)
+                                @foreach($quiz->questions as $q)
+                                <div class="bg-white border border-gray-100 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200">
+                                    <div class="flex justify-between items-center mb-4">
+                                        <h5 class="text-sm font-semibold text-gray-900">{{ $q->question }}</h5>
+                                        <button type="button"
+                                                onclick="openCreateAnswerModal({{ $q->id }})"
+                                                class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors duration-200">
+                                            <i class="fas fa-plus mr-2"></i> Add Answer
+                                        </button>
+                                    </div>
+                                    <h5 class="text-sm font-semibold text-gray-900 mb-2">List Answer</h5>
+
+                                    @foreach ($q->answers as $answer)
+                                        <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                                            <p class="text-sm text-gray-600">{{ $answer->answer }}</p>
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $answer->is_correct ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
+                                                {{ $answer->is_correct ? 'Correct' : 'Incorrect' }}
+                                            </span>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                @endforeach
+                            @else
+                                <div class="text-center py-8">
+                                    <p class="text-gray-600">No questions found</p>
+                                    @if(!isset($quiz))
+                                        <p class="text-sm text-gray-500 mt-2">Please create a quiz first</p>
+                                    @endif
+                                </div>
+                            @endif
+                        </div>
+
+                        <!-- Create Question Modal -->
+                        <div id="createQuestionModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
+                            <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                                <div class="mt-3">
+                                    <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">Create New Question</h3>
+                                    <form id="createQuestionForm" class="space-y-4">
+                                        <div>
+                                            <label for="question" class="block text-sm font-medium text-gray-700">Question</label>
+                                            <textarea id="question" name="question" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
+                                        </div>
+                                        <div>
+                                            <label for="type" class="block text-sm font-medium text-gray-700">Question Type</label>
+                                            <select id="type" name="type" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                <option value="multiple_choice">Multiple Choice</option>
+                                                <option value="true_false">True/False</option>
+                                                <option value="essay">Essay</option>
+                                            </select>
+                                        </div>
+                                        <div class="flex justify-end space-x-3">
+                                            <button type="button" onclick="closeCreateQuestionModal()" class="px-4 py-2 bg-gray-200 text-gray-800 text-sm font-medium rounded-lg hover:bg-gray-300 transition-colors duration-200">
+                                                Cancel
+                                            </button>
+                                            <button type="submit" class="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors duration-200">
+                                                Create Question
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Create Answer Modal -->
+                        <div id="createAnswerModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
+                            <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                                <div class="mt-3">
+                                    <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">Create New Answer</h3>
+                                    <form id="createAnswerForm" class="space-y-4">
+                                        <input type="hidden" id="questionId" name="questionId">
+                                        <div>
+                                            <label for="answer" class="block text-sm font-medium text-gray-700">Answer</label>
+                                            <textarea id="answer" name="answer" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
+                                        </div>
+                                        <div>
+                                            <label class="flex items-center">
+                                                <input type="checkbox" id="is_correct" name="is_correct" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                <span class="ml-2 text-sm text-gray-600">Mark as correct answer</span>
+                                            </label>
+                                        </div>
+                                        <div class="flex justify-end space-x-3">
+                                            <button type="button" onclick="closeCreateAnswerModal()" class="px-4 py-2 bg-gray-200 text-gray-800 text-sm font-medium rounded-lg hover:bg-gray-300 transition-colors duration-200">
+                                                Cancel
+                                            </button>
+                                            <button type="submit" class="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors duration-200">
+                                                Create Answer
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
                     </div>
 
                     <!-- Lesson Details -->
@@ -128,7 +239,7 @@
 </style>
 @endpush
 
-@push('scripts')
+
 <script>
     // Lazy load iframe for performance
     document.addEventListener('DOMContentLoaded', function () {
@@ -137,6 +248,90 @@
             iframe.setAttribute('loading', 'lazy');
         }
     });
+
+    // Modal functions
+    function openCreateQuestionModal() {
+        document.getElementById('createQuestionModal').classList.remove('hidden');
+    }
+
+    function closeCreateQuestionModal() {
+        document.getElementById('createQuestionModal').classList.add('hidden');
+    }
+
+    function openCreateAnswerModal(questionId) {
+        document.getElementById('questionId').value = questionId;
+        document.getElementById('createAnswerModal').classList.remove('hidden');
+    }
+
+    function closeCreateAnswerModal() {
+        document.getElementById('createAnswerModal').classList.add('hidden');
+        document.getElementById('createAnswerForm').reset();
+    }
+
+    // Question form submission
+    document.getElementById('createQuestionForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const formData = {
+            question: document.getElementById('question').value,
+            type: document.getElementById('type').value,
+        };
+
+        try {
+            @if(isset($quiz))
+            const response = await fetch(`{{ route('courses.quiz.question.create', ['quizId' => $quiz->id]) }}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if (response.ok) {
+                window.location.reload();
+            } else {
+                alert('Failed to create question. Please try again.');
+            }
+            @else
+            alert('Quiz not found. Please create a quiz first.');
+            @endif
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        }
+    });
+
+    // Answer form submission
+    document.getElementById('createAnswerForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const questionId = document.getElementById('questionId').value;
+        const formData = {
+            answer: document.getElementById('answer').value,
+            is_correct: document.getElementById('is_correct').checked,
+        };
+
+        try {
+            const response = await fetch(`/courses/quiz/question/${questionId}/answer`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if (response.ok) {
+                window.location.reload();
+            } else {
+                alert('Failed to create answer. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        }
+    });
 </script>
-@endpush
+
 @endsection

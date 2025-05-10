@@ -13,76 +13,29 @@ use Illuminate\Support\Facades\Validator;
 
 class QuizController extends Controller
 {
-    public function index()
+    public function getQuizByLessonId($lessonId)
     {
-        $quizzes = Quiz::with(['lesson'])->get();
-        return response()->json(['data' => $quizzes]);
+        $quiz = Quiz::with('questions.answers')->where('lesson_id', $lessonId)->first();
+
+        return $this->successResponse($quiz);
     }
 
-    public function show($id)
-    {
-        $quiz = Quiz::with(['questions.answers'])->findOrFail($id);
-        return response()->json(['data' => $quiz]);
-    }
-
-    public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'lesson_id' => 'required|exists:lessons,id',
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'passing_score' => 'required|integer|min:0|max:100',
-            'questions' => 'required|array',
-            'questions.*.question' => 'required|string',
-            'questions.*.type' => 'required|in:multiple_choice,true_false,essay',
-            'questions.*.points' => 'required|integer|min:1',
-            'questions.*.answers' => 'required_if:questions.*.type,multiple_choice,true_false|array',
-            'questions.*.answers.*.answer' => 'required|string',
-            'questions.*.answers.*.is_correct' => 'required|boolean',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        $quiz = Quiz::create($request->only(['lesson_id', 'title', 'description', 'passing_score']));
-
-        foreach ($request->questions as $questionData) {
-            $question = $quiz->questions()->create([
-                'question' => $questionData['question'],
-                'type' => $questionData['type'],
-                'points' => $questionData['points'],
-            ]);
-
-            if (isset($questionData['answers'])) {
-                foreach ($questionData['answers'] as $answerData) {
-                    $question->answers()->create([
-                        'answer' => $answerData['answer'],
-                        'is_correct' => $answerData['is_correct'],
-                    ]);
-                }
-            }
-        }
-
-        return response()->json(['message' => 'Quiz created successfully', 'data' => $quiz->load('questions.answers')], 201);
-    }
-
-    public function submitAttempt(Request $request, $quizId)
+    public function submitAttempt(Request $request, $lessonId)
     {
         $validator = Validator::make($request->all(), [
             'answers' => 'required|array',
             'answers.*.question_id' => 'required|exists:quiz_questions,id',
-            'answers.*.answer' => 'required|string',
+            'answers.*.quiz_answer_id' => 'required|exists:quiz_answers,id',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $quiz = Quiz::findOrFail($quizId);
+        $quiz = Quiz::where('lesson_id', $lessonId)->first();
         $attempt = UserQuizAttempt::create([
             'user_id' => Auth::id(),
-            'quiz_id' => $quizId,
+            'quiz_id' => $quiz->id,
             'started_at' => now(),
             'completed_at' => now(),
         ]);
@@ -95,8 +48,8 @@ class QuizController extends Controller
             $maxScore += $question->points;
 
             if ($question->type === 'multiple_choice' || $question->type === 'true_false') {
-                $correctAnswer = $question->answers()->where('is_correct', true)->first();
-                if ($correctAnswer && $correctAnswer->answer === $answer['answer']) {
+                $selectedAnswer = QuizAnswer::find($answer['quiz_answer_id']);
+                if ($selectedAnswer && $selectedAnswer->is_correct) {
                     $totalScore += $question->points;
                 }
             }

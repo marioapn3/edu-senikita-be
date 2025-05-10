@@ -84,18 +84,10 @@ Route::controller(CourseRatingController::class)->group(function () {
 });
 
 // Quiz Routes
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/quizzes', [QuizController::class, 'index']);
-    Route::get('/quizzes/{id}', [QuizController::class, 'show']);
-    Route::post('/quizzes', [QuizController::class, 'store']);
-    Route::post('/quizzes/{quizId}/submit', [QuizController::class, 'submitAttempt']);
+Route::middleware('auth:api')->group(function () {
+    Route::get('quizzes/lesson/{lesson_id}', [QuizController::class, 'getQuizByLessonId']);
+    Route::post('quizzes/submit/{lesson_id}', [QuizController::class, 'submitAttempt']);
 
-    // Final Submission Routes
-    Route::get('/final-submissions', [FinalSubmissionController::class, 'index']);
-    Route::get('/final-submissions/{id}', [FinalSubmissionController::class, 'show']);
-    Route::post('/final-submissions', [FinalSubmissionController::class, 'store']);
-    Route::put('/final-submissions/{id}', [FinalSubmissionController::class, 'update']);
-    Route::get('/final-submissions/{id}/download', [FinalSubmissionController::class, 'download']);
 });
 
 require __DIR__ . '/debug.php';

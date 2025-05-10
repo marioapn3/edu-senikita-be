@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\Api\QuizController;
 use App\Http\Controllers\Web\CategoryController;
 use App\Http\Controllers\Web\AuthenticationController;
 use App\Http\Controllers\Web\DashboardController;
 use App\Http\Controllers\Web\InstructorController;
 use App\Http\Controllers\Web\CourseController;
 use App\Http\Controllers\Web\LessonController;
+use App\Http\Controllers\Web\QuizController as WebQuizController;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
@@ -60,6 +62,15 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/edit', [LessonController::class, 'edit'])->name('courses.lessons.edit');
             Route::put('/{id}', [LessonController::class, 'update'])->name('courses.lessons.update');
             Route::delete('/{id}', [LessonController::class, 'destroy'])->name('courses.lessons.destroy');
+        });
+
+        Route::prefix('quiz')->group(function () {
+            Route::prefix('/question')->group(function () {
+                Route::post('/{quizId}', [WebQuizController::class, 'createQuestion'])->name('courses.quiz.question.create');
+                Route::prefix('/{questionId}/answer')->group(function () {
+                    Route::post('/', [WebQuizController::class, 'createAnswer'])->name('courses.quiz.question.answer.create');
+                });
+            });
         });
     });
 

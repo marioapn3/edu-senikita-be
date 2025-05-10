@@ -11,10 +11,12 @@ use Illuminate\Support\Str;
 class LessonService
 {
     protected $uploadService;
+    protected $quizService;
 
-    public function __construct(UploadService $uploadService)
+    public function __construct(UploadService $uploadService, QuizService $quizService)
     {
         $this->uploadService = $uploadService;
+        $this->quizService = $quizService;
     }
     public function getAll($request)
     {
@@ -109,8 +111,16 @@ class LessonService
         }
         $data['slug'] = $slug;
 
-        $category = Lesson::create($data);
-        return $category;
+        $lesson = Lesson::create($data);
+        if($data['type'] == 'quiz') {
+            $request = [
+                'lesson_id' => $lesson->id,
+                'title' => $data['title'],
+                'description' => $data['description'],
+            ];
+            $quiz = $this->quizService->createQuiz($request);
+        }
+        return $lesson;
     }
 
     public function checkOrderByCourseId($order, $course_id){
