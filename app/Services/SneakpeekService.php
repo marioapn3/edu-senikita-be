@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\SneakPeek;
 
-class SneakPeekService
+class SneakpeekService
 {
     public function create($request, $courseId){
         $sneakPeek = SneakPeek::create([

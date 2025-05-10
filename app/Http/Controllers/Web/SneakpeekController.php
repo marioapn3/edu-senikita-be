@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Services\SneakPeekService;
+use App\Services\SneakpeekService;
 use Illuminate\Http\Request;
 
 class SneakpeekController extends Controller
 {
     protected $sneakPeekService;
-    public function __construct(SneakPeekService $sneakPeekService)
+    public function __construct(SneakpeekService $sneakPeekService)
     {
         $this->sneakPeekService = $sneakPeekService;
     }
