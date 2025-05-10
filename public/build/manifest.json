@@ -1,0 +1,35 @@
+{
+  "public/images/company-icon-01.svg": {
+    "file": "assets/company-icon-01-BXTU2jYS.svg",
+    "src": "public/images/company-icon-01.svg"
+  },
+  "public/images/company-icon-02.svg": {
+    "file": "assets/company-icon-02-opEsu3jk.svg",
+    "src": "public/images/company-icon-02.svg"
+  },
+  "public/images/company-icon-03.svg": {
+    "file": "assets/company-icon-03-CJO89YIU.svg",
+    "src": "public/images/company-icon-03.svg"
+  },
+  "public/images/company-icon-04.svg": {
+    "file": "assets/company-icon-04-C4Jy5peQ.svg",
+    "src": "public/images/company-icon-04.svg"
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-BPEZb2W4.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-YWQWGb_a.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "assets": [
+      "assets/company-icon-01-BXTU2jYS.svg",
+      "assets/company-icon-02-opEsu3jk.svg",
+      "assets/company-icon-03-CJO89YIU.svg",
+      "assets/company-icon-04-C4Jy5peQ.svg"
+    ]
+  }
+}
