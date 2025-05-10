@@ -29,7 +29,6 @@
 
             <li>
                 <form method="POST" action="{{ route('logout') }}">
-                    @method('DELETE')
                     @csrf
                     <button
                         class="flex items-center px-3 py-1 text-sm font-medium text-indigo-500 hover:text-indigo-600"
