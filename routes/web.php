@@ -8,6 +8,8 @@ use App\Http\Controllers\Web\InstructorController;
 use App\Http\Controllers\Web\CourseController;
 use App\Http\Controllers\Web\LessonController;
 use App\Http\Controllers\Web\QuizController as WebQuizController;
+use App\Http\Controllers\Web\RequirementController;
+use App\Http\Controllers\Web\SneakpeekController;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
@@ -64,18 +66,19 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('/{id}', [LessonController::class, 'destroy'])->name('courses.lessons.destroy');
         });
 
-        Route::prefix('quiz')->group(function () {
-            Route::prefix('/question')->group(function () {
-                Route::post('/{quizId}', [WebQuizController::class, 'createQuestion'])->name('courses.quiz.question.create');
-                Route::prefix('/{questionId}/answer')->group(function () {
-                    Route::post('/', [WebQuizController::class, 'createAnswer'])->name('courses.quiz.question.answer.create');
-                });
-                Route::delete('/{questionId}', [WebQuizController::class, 'deleteQuestion'])->name('courses.quiz.question.delete');
-            });
-        });
+        Route::post('quiz/question/{quizId}', [WebQuizController::class, 'createQuestion'])->name('courses.quiz.question.create');
+        Route::post('quiz/question/{questionId}/answer', [WebQuizController::class, 'createAnswer'])->name('courses.quiz.question.answer.create');
+        Route::delete('quiz/question/{questionId}', [WebQuizController::class, 'deleteQuestion'])->name('courses.quiz.question.delete');
 
         Route::delete('answer/{answerId}', [WebQuizController::class, 'deleteAnswer'])->name('quiz.answer.delete');
 
+        Route::post('sneakpeek/{courseId}', [SneakpeekController::class, 'create'])->name('courses.sneakpeek.create');
+        Route::put('sneakpeek/{sneakPeekId}', [SneakpeekController::class, 'update'])->name('courses.sneakpeek.update');
+        Route::delete('sneakpeek/{sneakPeekId}', [SneakpeekController::class, 'delete'])->name('courses.sneakpeek.delete');
+
+        Route::post('requirement/{courseId}', [RequirementController::class, 'create'])->name('courses.requirement.create');
+        Route::put('requirement/{requirementId}', [RequirementController::class, 'update'])->name('courses.requirement.update');
+        Route::delete('requirement/{requirementId}', [RequirementController::class, 'delete'])->name('courses.requirement.delete');
 
     });
 

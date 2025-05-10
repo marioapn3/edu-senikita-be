@@ -59,6 +59,7 @@
     @include('components.toast')
 
     <script src="./assets/vendor/preline/dist/preline.js"></script>
+    @stack('scripts')
 </body>
 
 </html>

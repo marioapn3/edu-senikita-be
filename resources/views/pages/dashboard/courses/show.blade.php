@@ -65,7 +65,7 @@
     </div>
 
     <!-- Lessons List -->
-    <div class="bg-white rounded-sm shadow-lg">
+    <div class="bg-white rounded-sm shadow-lg mb-8">
         <div class="p-6">
             <h2 class="mb-4 text-lg font-semibold text-slate-800">Lessons</h2>
             <div class="overflow-x-auto">
@@ -140,5 +140,180 @@
             </div>
         </div>
     </div>
+
+    {{-- SneakPeek and Requirements --}}
+    <div class="grid grid-cols-1 gap-4 mb-8 sm:grid-cols-2">
+        <!-- SneakPeek Section -->
+        <div class="bg-white rounded-sm shadow-lg h-full">
+            <div class="p-6 flex flex-col h-full">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-semibold text-slate-800">SneakPeek</h2>
+                    <button onclick="openSneakPeekModal()" class="text-white bg-indigo-500 btn hover:bg-indigo-600">
+                        <svg class="w-4 h-4 opacity-50 fill-current shrink-0" viewBox="0 0 16 16">
+                            <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
+                        </svg>
+                        <span class="ml-2">Add SneakPeek</span>
+                    </button>
+                </div>
+                <div id="sneakpeek-list" class="space-y-3 flex-grow">
+                    @forelse($course->sneakpeeks as $sneakpeek)
+                    <div class="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+                        <p class="text-sm text-slate-600">{{ $sneakpeek->text }}</p>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="editSneakPeek({{ $sneakpeek->id }}, '{{ $sneakpeek->text }}')" class="text-indigo-500 hover:text-indigo-600">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                            </button>
+                            <form action="{{ route('courses.sneakpeek.delete', $sneakpeek->id) }}" method="POST" class="inline-flex items-center">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-rose-500 hover:text-rose-600" onclick="return confirm('Are you sure you want to delete this sneakpeek?')">
+                                    <svg class="w-4 h-4 align-middle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    @empty
+                    <p class="text-sm text-slate-500">No sneakpeeks added yet.</p>
+                    @endforelse
+                </div>
+            </div>
+        </div>
+
+        <!-- Requirements Section -->
+        <div class="bg-white rounded-sm shadow-lg h-full">
+            <div class="p-6 flex flex-col h-full">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-semibold text-slate-800">Requirements</h2>
+                    <button onclick="openRequirementModal()" class="text-white bg-indigo-500 btn hover:bg-indigo-600">
+                        <svg class="w-4 h-4 opacity-50 fill-current shrink-0" viewBox="0 0 16 16">
+                            <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
+                        </svg>
+                        <span class="ml-2">Add Requirement</span>
+                    </button>
+                </div>
+                <div id="requirements-list" class="space-y-3 flex-grow">
+                    @forelse($course->requirements as $requirement)
+                    <div class="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+                        <p class="text-sm text-slate-600">{{ $requirement->text }}</p>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="editRequirement({{ $requirement->id }}, '{{ $requirement->text }}')" class="text-indigo-500 hover:text-indigo-600">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                            </button>
+                            <form action="{{ route('courses.requirement.delete', $requirement->id) }}" method="POST" class="inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-rose-500 hover:text-rose-600" onclick="return confirm('Are you sure you want to delete this requirement?')">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    @empty
+                    <p class="text-sm text-slate-500">No requirements added yet.</p>
+                    @endforelse
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- SneakPeek Modal -->
+<div id="sneakpeek-modal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" aria-hidden="true"></div>
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        <div class="inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+            <form id="sneakpeek-form" method="POST">
+                @csrf
+                <div>
+                    <h3 class="text-lg font-medium leading-6 text-gray-900" id="sneakpeek-modal-title">Add SneakPeek</h3>
+                    <div class="mt-4">
+                        <label for="sneakpeek-text" class="block text-sm font-medium text-gray-700">Text</label>
+                        <textarea id="sneakpeek-text" name="text" rows="3" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+                    </div>
+                </div>
+                <div class="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
+                    <button type="submit" class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm">Save</button>
+                    <button type="button" onclick="closeSneakPeekModal()" class="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Requirement Modal -->
+<div id="requirement-modal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" aria-hidden="true"></div>
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        <div class="inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+            <form id="requirement-form" method="POST">
+                @csrf
+                <div>
+                    <h3 class="text-lg font-medium leading-6 text-gray-900" id="requirement-modal-title">Add Requirement</h3>
+                    <div class="mt-4">
+                        <label for="requirement-text" class="block text-sm font-medium text-gray-700">Text</label>
+                        <textarea id="requirement-text" name="text" rows="3" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+                    </div>
+                </div>
+                <div class="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
+                    <button type="submit" class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm">Save</button>
+                    <button type="button" onclick="closeRequirementModal()" class="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 @endsection
+
+
+<script>
+    // SneakPeek Modal Functions
+    function openSneakPeekModal() {
+        document.getElementById('sneakpeek-modal').classList.remove('hidden');
+        document.getElementById('sneakpeek-form').action = "{{ route('courses.sneakpeek.create', $course->id) }}";
+        document.getElementById('sneakpeek-modal-title').textContent = 'Add SneakPeek';
+        document.getElementById('sneakpeek-text').value = '';
+    }
+
+    function closeSneakPeekModal() {
+        document.getElementById('sneakpeek-modal').classList.add('hidden');
+    }
+
+    function editSneakPeek(id, text) {
+        document.getElementById('sneakpeek-modal').classList.remove('hidden');
+        document.getElementById('sneakpeek-form').action = `/courses/sneakpeek/${id}`;
+        document.getElementById('sneakpeek-modal-title').textContent = 'Edit SneakPeek';
+        document.getElementById('sneakpeek-text').value = text;
+        document.getElementById('sneakpeek-form').insertAdjacentHTML('beforeend', '<input type="hidden" name="_method" value="PUT">');
+    }
+
+    // Requirement Modal Functions
+    function openRequirementModal() {
+        document.getElementById('requirement-modal').classList.remove('hidden');
+        document.getElementById('requirement-form').action = "{{ route('courses.requirement.create', $course->id) }}";
+        document.getElementById('requirement-modal-title').textContent = 'Add Requirement';
+        document.getElementById('requirement-text').value = '';
+    }
+
+    function closeRequirementModal() {
+        document.getElementById('requirement-modal').classList.add('hidden');
+    }
+
+    function editRequirement(id, text) {
+        document.getElementById('requirement-modal').classList.remove('hidden');
+        document.getElementById('requirement-form').action = `/courses/requirement/${id}`;
+        document.getElementById('requirement-modal-title').textContent = 'Edit Requirement';
+        document.getElementById('requirement-text').value = text;
+        document.getElementById('requirement-form').insertAdjacentHTML('beforeend', '<input type="hidden" name="_method" value="PUT">');
+    }
+</script>

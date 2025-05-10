@@ -44,7 +44,4 @@ class QuizController extends Controller
         toastr()->success('Answer deleted successfully');
         return redirect()->back();
     }
-
-
-
 }
