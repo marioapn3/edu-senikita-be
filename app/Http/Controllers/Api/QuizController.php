@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Lesson;
 use App\Models\Quiz;
 use App\Models\QuizQuestion;
 use App\Models\QuizAnswer;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Validator;
 
 class QuizController extends Controller
 {
+
     public function getQuizByLessonId($lessonId)
     {
         $quiz = Quiz::with('questions.answers')->where('lesson_id', $lessonId)->first();
@@ -59,6 +61,9 @@ class QuizController extends Controller
             'score' => $totalScore,
             'is_passed' => ($totalScore / $maxScore * 100) >= $quiz->passing_score,
         ]);
+
+        $lesson = Lesson::find($lessonId);
+        $lesson->users()->attach(Auth::id(), ['is_completed' => true, 'completed_at' => now()]);
 
         return response()->json([
             'message' => 'Quiz attempt submitted successfully',
