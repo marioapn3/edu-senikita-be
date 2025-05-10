@@ -62,8 +62,12 @@ class QuizController extends Controller
             'is_passed' => ($totalScore / $maxScore * 100) >= $quiz->passing_score,
         ]);
 
-        $lesson = Lesson::find($lessonId);
-        $lesson->users()->attach(Auth::id(), ['is_completed' => true, 'completed_at' => now()]);
+        if ($attempt->is_passed) {
+            $lesson = Lesson::find($lessonId);
+            $lesson->users()->attach(Auth::id(), ['is_completed' => true, 'completed_at' => now()]);
+        }
+
+
 
         return response()->json([
             'message' => 'Quiz attempt submitted successfully',
