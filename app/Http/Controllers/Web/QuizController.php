@@ -29,6 +29,18 @@ class QuizController extends Controller
         return response()->json(['message' => 'Answer created successfully']);
     }
 
+    public function deleteQuestion(Request $request, $questionId)
+    {
+        $this->quizService->deleteQuestion($questionId);
+        return redirect()->back()->with('success', 'Question deleted successfully');
+    }
+
+    public function deleteAnswer($answerId)
+    {
+        $this->quizService->deleteAnswer($answerId);
+        return redirect()->back()->with('success', 'Answer deleted successfully');
+    }
+
 
 
 }

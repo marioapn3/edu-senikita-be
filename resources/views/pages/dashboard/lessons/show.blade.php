@@ -76,25 +76,56 @@
 
                             @if(isset($quiz) && isset($quiz->questions) && count($quiz->questions) > 0)
                                 @foreach($quiz->questions as $q)
-                                <div class="bg-white border border-gray-100 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200">
-                                    <div class="flex justify-between items-center mb-4">
-                                        <h5 class="text-sm font-semibold text-gray-900">{{ $q->question }}</h5>
-                                        <button type="button"
-                                                onclick="openCreateAnswerModal({{ $q->id }})"
-                                                class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors duration-200">
-                                            <i class="fas fa-plus mr-2"></i> Add Answer
-                                        </button>
-                                    </div>
-                                    <h5 class="text-sm font-semibold text-gray-900 mb-2">List Answer</h5>
-
-                                    @foreach ($q->answers as $answer)
-                                        <div class="flex items-center justify-between py-2 border-b border-gray-100">
-                                            <p class="text-sm text-gray-600">{{ $answer->answer }}</p>
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $answer->is_correct ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
-                                                {{ $answer->is_correct ? 'Correct' : 'Incorrect' }}
-                                            </span>
+                                <div class="bg-white border border-gray-100 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200 mb-6">
+                                    <div class="flex justify-between items-center mb-6">
+                                        <div class="flex-1">
+                                            <h5 class="text-base font-semibold text-gray-900">{{ $q->question }}</h5>
+                                            <p class="text-sm text-gray-500 mt-1">Type: {{ ucfirst($q->type) }}</p>
                                         </div>
-                                    @endforeach
+                                        <div class="flex items-center gap-3">
+                                            <button type="button"
+                                                    onclick="openCreateAnswerModal({{ $q->id }})"
+                                                    class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors duration-200">
+                                                <i class="fas fa-plus mr-2"></i> Add Answer
+                                            </button>
+                                            <form action="{{ route('courses.quiz.question.delete', [$q->id]) }}" method="POST" class="m-0">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="inline-flex items-center px-3 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors duration-200">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                    <div class="bg-gray-50 rounded-lg p-4">
+                                        <h6 class="text-sm font-semibold text-gray-700 mb-3">Answers</h6>
+                                        @if(count($q->answers) > 0)
+                                            <div class="space-y-2">
+                                                @foreach ($q->answers as $answer)
+                                                    <div class="flex items-center justify-between py-3 px-4 bg-white rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors duration-200">
+                                                        <div class="flex-1">
+                                                            <p class="text-sm text-gray-600">{{ $answer->answer }}</p>
+                                                        </div>
+                                                        <div class="flex items-center gap-4">
+                                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $answer->is_correct ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
+                                                                {{ $answer->is_correct ? 'Correct' : 'Incorrect' }}
+                                                            </span>
+                                                            <form action="{{ route('quiz.answer.delete', [ $answer->id]) }}" method="POST" class="m-0">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit" class="inline-flex items-center px-3 py-1.5 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors duration-200">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        @else
+                                            <p class="text-sm text-gray-500 text-center py-4">No answers added yet</p>
+                                        @endif
+                                    </div>
                                 </div>
                                 @endforeach
                             @else

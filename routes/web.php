@@ -70,8 +70,13 @@ Route::middleware(['auth'])->group(function () {
                 Route::prefix('/{questionId}/answer')->group(function () {
                     Route::post('/', [WebQuizController::class, 'createAnswer'])->name('courses.quiz.question.answer.create');
                 });
+                Route::delete('/{questionId}', [WebQuizController::class, 'deleteQuestion'])->name('courses.quiz.question.delete');
             });
         });
+
+        Route::delete('answer/{answerId}', [WebQuizController::class, 'deleteAnswer'])->name('quiz.answer.delete');
+
+
     });
 
     Route::post('/logout', [AuthenticationController::class, 'logout'])->name('logout');
