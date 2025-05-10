@@ -66,6 +66,16 @@
                         </a>
                     </li>
 
+                    <!-- Categories -->
+                    <li class="px-3 py-2 rounded-sm mb-0.5 last:mb-0 @if (Request::is('categories*')) {{ 'bg-slate-900' }} @endif">
+                        <a href="{{ route('categories.index') }}" class="block text-slate-200 hover:text-white truncate transition duration-150 @if (Request::is('categories*')) {{ 'hover:text-slate-200' }} @endif">
+                            <div class="flex items-center">
+                                <i class="fa-solid fa-tags text-2xl text-slate-400 @if (Request::is('categories*')) {{ 'text-slate-200' }} @endif"></i>
+                                <span class="ml-3 text-sm font-medium duration-200 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100">Categories</span>
+                            </div>
+                        </a>
+                    </li>
+
                     <li class="px-3 py-2 rounded-sm mb-0.5 last:mb-0 @if (Request::is('dashboard/hsk-groups*')) {{ 'bg-slate-900' }} @endif"
                         x-data="{ open: {{ Request::is('dashboard/hsk-groups*') ? 'true' : 'false' }} }">
                         <a class="block text-slate-200 hover:text-white truncate transition duration-150 @if (Request::is('dashboard/hsk-groups*')) {{ 'hover:text-slate-200' }} @endif"
