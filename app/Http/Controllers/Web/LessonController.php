@@ -41,8 +41,7 @@ class LessonController extends Controller
             return redirect()->route('courses.show', $courseId)
                 ->with('success', 'Lesson created successfully');
         } catch (\Exception $e) {
-            return redirect()->route('courses.show', $courseId)
-                ->with('error', 'Failed to create lesson');
+            return redirect()->back()->with('error', 'Failed to create lesson');
         }
 
     }
