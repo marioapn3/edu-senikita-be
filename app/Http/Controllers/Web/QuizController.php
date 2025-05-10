@@ -20,25 +20,29 @@ class QuizController extends Controller
 
 
         $this->quizService->createQuestion($request, $quizId);
+        toastr()->success('Question created successfully');
         return response()->json(['message' => 'Question created successfully']);
     }
 
     public function createAnswer(Request $request, $questionId)
     {
         $this->quizService->createAnswer($request, $questionId);
+        toastr()->success('Answer created successfully');
         return response()->json(['message' => 'Answer created successfully']);
     }
 
     public function deleteQuestion(Request $request, $questionId)
     {
         $this->quizService->deleteQuestion($questionId);
-        return redirect()->back()->with('success', 'Question deleted successfully');
+        toastr()->success('Question deleted successfully');
+        return redirect()->back();
     }
 
     public function deleteAnswer($answerId)
     {
         $this->quizService->deleteAnswer($answerId);
-        return redirect()->back()->with('success', 'Answer deleted successfully');
+        toastr()->success('Answer deleted successfully');
+        return redirect()->back();
     }
 
 
