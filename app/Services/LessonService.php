@@ -144,8 +144,15 @@ class LessonService
             'description',
             'content',
             'video_url',
+            'duration',
         ]);
 
+        if(isset($data['video_url'])) {
+            if(!filter_var($data['video_url'], FILTER_VALIDATE_URL)) {
+                throw new \Exception('Invalid video URL');
+            }
+            $data['video_url'] = str_replace('watch?v=', 'embed/', $data['video_url']);
+        }
 
         $category->update($data);
         return $category;
