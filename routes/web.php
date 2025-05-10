@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Api\QuizController;
 use App\Http\Controllers\Web\CategoryController;
 use App\Http\Controllers\Web\AuthenticationController;
 use App\Http\Controllers\Web\DashboardController;
@@ -81,6 +80,8 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('requirement/{requirementId}', [RequirementController::class, 'delete'])->name('courses.requirement.delete');
 
     });
+
+
 
     Route::post('/logout', [AuthenticationController::class, 'logout'])->name('logout');
 });

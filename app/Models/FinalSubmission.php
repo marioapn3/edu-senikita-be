@@ -9,7 +9,7 @@ class FinalSubmission extends Model
 {
     protected $fillable = [
         'user_id',
-        'course_id',
+        'lesson_id',
         'submission',
         'file_path',
         'status',
@@ -26,8 +26,8 @@ class FinalSubmission extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function course(): BelongsTo
+    public function lesson(): BelongsTo
     {
-        return $this->belongsTo(Course::class);
+        return $this->belongsTo(Lesson::class);
     }
 }

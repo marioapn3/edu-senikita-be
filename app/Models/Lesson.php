@@ -30,6 +30,11 @@ class Lesson extends Model
                 ->withTimestamps();
 }
 
+    public function submissions()
+    {
+        return $this->hasMany(FinalSubmission::class);
+    }
+
 
 
 }

@@ -90,4 +90,10 @@ Route::middleware('auth:api')->group(function () {
 
 });
 
+Route::middleware('auth:api')->prefix('final-submissions')->group(function () {
+    Route::get('/{lessonId}', [FinalSubmissionController::class, 'getByLessonId'])->name('final-submissions.getByLessonId');
+    Route::post('/', [FinalSubmissionController::class, 'store'])->name('final-submissions.store');
+    Route::put('/score/{id}', [FinalSubmissionController::class, 'score'])->name('final-submissions.score');
+});
+
 require __DIR__ . '/debug.php';

@@ -199,6 +199,84 @@
                             </div>
                         </div>
                         @endif
+                        @if($lesson->type == 'final')
+                            <div class="bg-white border border-gray-100 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200">
+                                <div class="flex items-center mb-4">
+                                    <i class="fas fa-file-alt text-indigo-600 mr-2"></i>
+                                    <h5 class="text-lg font-semibold text-gray-900">Final Submission</h5>
+                                </div>
+
+                                {{-- looping $lesson->submissions --}}
+
+                                    <div class="flex items-center justify-between py-3 px-4 bg-white rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors duration-200">
+                                        {{-- berikan table isinya $submission-> submmission,file_path, status, score, user->name --}}
+                                        <table class=" border-collapse border border-gray-200">
+                                            <tr>
+                                                <td class="border border-gray-200 p-2">Submission</td>
+                                                <td class="border border-gray-200 p-2">File Path</td>
+                                                <td class="border border-gray-200 p-2">Status</td>
+                                                <td class="border border-gray-200 p-2">Score</td>
+                                                <td class="border border-gray-200 p-2">User</td>
+                                                <td class="border border-gray-200 p-2">Tanggal Submit</td>
+                                                <td class="border border-gray-200 p-2">Action</td>
+                                            </tr>
+                                            @foreach($lesson->submissions as $submission)
+                                            <tr>
+                                                <td class="border border-gray-200 p-2">{{ $submission->submission }}</td>
+                                                <td class="border border-gray-200 p-2"><a href="{{ asset('storage/' . $submission->file_path) }}" target="_blank">View File</a></td>
+                                                <td class="border border-gray-200 p-2">{{ $submission->status }}</td>
+                                                <td class="border border-gray-200 p-2">{{ $submission->score }}</td>
+                                                <td class="border border-gray-200 p-2">{{ $submission->user->name }}</td>
+                                                <td class="border border-gray-200 p-2">{{ $submission->created_at->format('d-m-Y H:i:s') }}</td>
+                                                <td class="border border-gray-200 p-2">
+                                                    <button onclick="openScoreModal({{ $submission->id }})"
+                                                            class="inline-flex items-center px-3 py-1.5 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors duration-200">
+                                                        <i class="fas fa-star mr-2"></i> Score
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        </table>
+                                    </div>
+
+                                    <!-- Score Modal -->
+                                    <div id="scoreModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
+                                        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                                            <div class="mt-3">
+                                                <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">Score Submission</h3>
+                                                <form id="scoreForm" class="space-y-4">
+                                                    <input type="hidden" id="submissionId" name="submissionId">
+                                                    <div>
+                                                        <label for="score" class="block text-sm font-medium text-gray-700">Score (0-100)</label>
+                                                        <input type="number" id="score" name="score" min="0" max="100" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                    </div>
+                                                    <div>
+                                                        <label for="feedback" class="block text-sm font-medium text-gray-700">Feedback</label>
+                                                        <textarea id="feedback" name="feedback" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
+                                                    </div>
+                                                    <div>
+                                                        <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+                                                        <select id="status" name="status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                            <option value="reviewed">Reviewed</option>
+                                                            <option value="approved">Approved</option>
+                                                            <option value="rejected">Rejected</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="flex justify-end space-x-3">
+                                                        <button type="button" onclick="closeScoreModal()" class="px-4 py-2 bg-gray-200 text-gray-800 text-sm font-medium rounded-lg hover:bg-gray-300 transition-colors duration-200">
+                                                            Cancel
+                                                        </button>
+                                                        <button type="submit" class="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors duration-200">
+                                                            Submit Score
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                            </div>
+                        @endif
                     </div>
 
                     <!-- Lesson Details -->
@@ -355,6 +433,49 @@
                 window.location.reload();
             } else {
                 alert('Failed to create answer. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        }
+    });
+
+    // Score Modal functions
+    function openScoreModal(submissionId) {
+        document.getElementById('submissionId').value = submissionId;
+        document.getElementById('scoreModal').classList.remove('hidden');
+    }
+
+    function closeScoreModal() {
+        document.getElementById('scoreModal').classList.add('hidden');
+        document.getElementById('scoreForm').reset();
+    }
+
+    // Score form submission
+    document.getElementById('scoreForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const submissionId = document.getElementById('submissionId').value;
+        const formData = {
+            score: document.getElementById('score').value,
+            feedback: document.getElementById('feedback').value,
+            status: document.getElementById('status').value,
+        };
+
+        try {
+            const response = await fetch(`/api/final-submissions/${submissionId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if (response.ok) {
+                window.location.reload();
+            } else {
+                alert('Failed to submit score. Please try again.');
             }
         } catch (error) {
             console.error('Error:', error);

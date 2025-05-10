@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\FinalSubmission;
+use App\Services\UploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -11,87 +12,60 @@ use Illuminate\Support\Facades\Storage;
 
 class FinalSubmissionController extends Controller
 {
-    public function index()
+    protected $uploadService;
+    public function __construct(UploadService $uploadService)
     {
-        $submissions = FinalSubmission::with(['user', 'course'])
-            ->where('user_id', Auth::id())
-            ->get();
-        return response()->json(['data' => $submissions]);
+        $this->uploadService = $uploadService;
     }
-
-    public function show($id)
+    public function getByLessonId($lessonId)
     {
-        $submission = FinalSubmission::with(['user', 'course'])
-            ->where('user_id', Auth::id())
-            ->findOrFail($id);
-        return response()->json(['data' => $submission]);
+        $submissions = FinalSubmission::where('lesson_id', $lessonId)->get();
+        return $this->successResponse($submissions);
     }
-
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'course_id' => 'required|exists:courses,id',
+            'lesson_id' => 'required|exists:lessons,id',
             'submission' => 'required|string',
-            'file' => 'nullable|file|max:10240', // Max 10MB
+            'file_path' => 'nullable|file|max:10240',
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return $this->exceptionError($validator->errors(), 422);
         }
 
-        $data = [
-            'user_id' => Auth::id(),
-            'course_id' => $request->course_id,
-            'submission' => $request->submission,
-            'status' => 'pending',
-        ];
+        $submission = new FinalSubmission();
+        $submission->user_id = Auth::id();
+        $submission->lesson_id = $request->lesson_id;
+        $submission->submission = $request->submission;
 
-        if ($request->hasFile('file')) {
-            $path = $request->file('file')->store('final-submissions');
-            $data['file_path'] = $path;
+        if ($request->hasFile('file_path')) {
+            $path = $this->uploadService->upload($request->file('file_path'), 'final-submissions');
+            $submission->file_path = $path;
         }
 
-        $submission = FinalSubmission::create($data);
+        $submission->save();
 
-        return response()->json([
-            'message' => 'Final submission created successfully',
-            'data' => $submission
-        ], 201);
+        return $this->successResponse($submission, 'Final submission created successfully', 201);
     }
-
-    public function update(Request $request, $id)
+    public function score(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'status' => 'required|in:reviewed,approved,rejected',
-            'feedback' => 'required|string',
             'score' => 'required|integer|min:0|max:100',
+            'feedback' => 'required|string',
+            'status' => 'required|in:reviewed,approved,rejected',
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return $this->exceptionError($validator->errors(), 422);
         }
 
         $submission = FinalSubmission::findOrFail($id);
-        $submission->update($request->only(['status', 'feedback', 'score']));
+        $submission->score = $request->score;
+        $submission->feedback = $request->feedback;
+        $submission->status = $request->status;
+        $submission->save();
 
-        return response()->json([
-            'message' => 'Final submission updated successfully',
-            'data' => $submission
-        ]);
-    }
-
-    public function download($id)
-    {
-        $submission = FinalSubmission::findOrFail($id);
-
-        if (!$submission->file_path) {
-            return response()->json(['message' => 'No file attached to this submission'], 404);
-        }
-
-        if (!Storage::exists($submission->file_path)) {
-            return response()->json(['message' => 'File not found'], 404);
-        }
-
-        return Storage::download($submission->file_path);
+        return $this->successResponse($submission, 'Final submission updated successfully');
     }
 }
