@@ -7,6 +7,8 @@ use App\Http\Controllers\Api\CourseRatingController;
 use App\Http\Controllers\Api\EnrollmentController;
 use App\Http\Controllers\Api\GoogleController;
 use App\Http\Controllers\Api\LessonController;
+use App\Http\Controllers\Api\QuizController;
+use App\Http\Controllers\Api\FinalSubmissionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
@@ -79,6 +81,21 @@ Route::controller(EnrollmentController::class)->group(function () {
 // Course Rating Routes
 Route::controller(CourseRatingController::class)->group(function () {
     Route::post('course-ratings', 'store');
+});
+
+// Quiz Routes
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/quizzes', [QuizController::class, 'index']);
+    Route::get('/quizzes/{id}', [QuizController::class, 'show']);
+    Route::post('/quizzes', [QuizController::class, 'store']);
+    Route::post('/quizzes/{quizId}/submit', [QuizController::class, 'submitAttempt']);
+
+    // Final Submission Routes
+    Route::get('/final-submissions', [FinalSubmissionController::class, 'index']);
+    Route::get('/final-submissions/{id}', [FinalSubmissionController::class, 'show']);
+    Route::post('/final-submissions', [FinalSubmissionController::class, 'store']);
+    Route::put('/final-submissions/{id}', [FinalSubmissionController::class, 'update']);
+    Route::get('/final-submissions/{id}/download', [FinalSubmissionController::class, 'download']);
 });
 
 require __DIR__ . '/debug.php';

@@ -13,10 +13,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
+        User::firstOrCreate([
+            'email' => 'adminedu@senikita'
+        ],[
             'name' => 'Admin',
             'email' => 'adminedu@senikita',
             'password' => bcrypt('rahasiabangetpasswordnya'),
+            'google_id' => null,
+            'role' => 'admin',
+        ]);
+
+        User::firstOrCreate([
+            'email' => 'admin@gmail.com'
+        ],[
+            'name' => 'Admin',
+            'email' => 'admin@gmail.com',
+            'password' => bcrypt('123'),
             'google_id' => null,
             'role' => 'admin',
         ]);
@@ -24,7 +36,6 @@ class DatabaseSeeder extends Seeder
             InstructorSeeder::class,
             CategorySeeder::class,
             CourseSeeder::class,
-
         ]);
     }
 }
