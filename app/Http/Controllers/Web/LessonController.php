@@ -34,11 +34,17 @@ class LessonController extends Controller
 
     public function store(Request $request, $courseId)
     {
-        $request->merge(['course_id' => $courseId]);
-        $this->lessonService->create($request);
+        try {
+            $request->merge(['course_id' => $courseId]);
+            $this->lessonService->create($request);
 
-        return redirect()->route('courses.show', $courseId)
-            ->with('success', 'Lesson created successfully');
+            return redirect()->route('courses.show', $courseId)
+                ->with('success', 'Lesson created successfully');
+        } catch (\Exception $e) {
+            return redirect()->route('courses.show', $courseId)
+                ->with('error', 'Failed to create lesson');
+        }
+
     }
 
     public function edit($courseId, $id)

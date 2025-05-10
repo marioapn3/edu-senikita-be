@@ -41,7 +41,7 @@
                         </div>
 
                         <!-- Lesson Video -->
-                        @if($lesson->video_url)
+                        @if($lesson->video_url && $lesson->type == 'video')
                         <div class="bg-white border border-gray-100 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200">
                             <div class="flex items-center mb-4">
                                 <i class="fas fa-video text-indigo-600 mr-2"></i>
