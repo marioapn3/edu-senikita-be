@@ -25,7 +25,6 @@ class CourseService
 
         $query = Course::query();
 
-        // $query->where('status', 'published');
 
         if ($search) {
             $query->where('title', 'like', '%' . $search . '%');

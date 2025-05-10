@@ -7,6 +7,7 @@ use App\Services\CourseService;
 use App\Services\LessonService;
 use App\Services\QuizService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class LessonController extends Controller
 {
@@ -38,12 +39,22 @@ class LessonController extends Controller
             $request->merge(['course_id' => $courseId]);
             $this->lessonService->create($request);
 
-            return redirect()->route('courses.show', $courseId)
-                ->with('success', 'Lesson created successfully');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Failed to create lesson');
-        }
+            // Add debugging
+            Log::info('Session before redirect:', [
+                'has_success' => session()->has('success'),
+                'success_message' => session()->get('success')
+            ]);
 
+            toastr()->success('Data has been saved successfully!');
+            return redirect()->route('courses.show', $courseId);
+        } catch (\Exception $e) {
+            Log::error('Error in store method:', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            toastr()->error($e->getMessage());
+            return redirect()->back();
+        }
     }
 
     public function edit($courseId, $id)
