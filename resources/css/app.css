@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=fallback');
-
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 
@@ -9,6 +8,8 @@
 @import 'additional-styles/toggle-switch.css';
 @import 'additional-styles/flatpickr.css';
 @import 'additional-styles/theme.css';
+
+@import 'preline/variants.css';
 
 @tailwind base;
 @tailwind components;

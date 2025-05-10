@@ -9,17 +9,23 @@ use App\Http\Requests\Pagination\PaginationRequest;
 use App\Http\Resources\Course\CourseResource;
 use App\Http\Resources\Course\ListCourseResource;
 use App\Models\Course;
+use App\Services\CategoryService;
 use App\Services\CourseService;
+use App\Services\InstructorService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class CourseController extends Controller
 {
     protected $courseService;
+    protected $categoryService;
+    protected $instructorService;
 
-    public function __construct(CourseService $courseService)
+    public function __construct(CourseService $courseService, CategoryService $categoryService, InstructorService $instructorService)
     {
         $this->courseService = $courseService;
+        $this->categoryService = $categoryService;
+        $this->instructorService = $instructorService;
         $this->middleware(['auth:api', 'role:admin'])->only(['store', 'update', 'destroy']);
 
     }

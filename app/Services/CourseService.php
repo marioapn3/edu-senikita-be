@@ -25,7 +25,7 @@ class CourseService
 
         $query = Course::query();
 
-        $query->where('status', 'published');
+        // $query->where('status', 'published');
 
         if ($search) {
             $query->where('title', 'like', '%' . $search . '%');
@@ -61,9 +61,9 @@ class CourseService
         return $courses;
     }
 
-    public function getById($id, $request)
+    public function getById($id, $request )
     {
-        $course = Course::findOrFail($id);
+        $course = Course::with('categories')->findOrFail($id);
 
         if ($request->bearerToken()) {
             try {
@@ -98,12 +98,11 @@ class CourseService
         $data = $request->only([
             'title',
             'description',
-            'category_id',
             'status',
             'level',
-            'duration',
             'certificate_available',
             'preview_video',
+            'instructor_id',
         ]);
 
         if ($request->hasFile('thumbnail')) {
@@ -116,12 +115,20 @@ class CourseService
         }
         $data['slug'] = $slug;
 
-        return Course::create($data);
+
+       $course = Course::create($data);
+
+       if ($request->has('categories')) {
+        // dd($request->categories);
+        $course->categories()->attach($request->input('categories'));
+       }
+
+       return $course;
     }
 
     public function getBySlug($slug , $request)
     {
-        $course = Course::where('slug', $slug)->first();
+        $course = Course::where('slug', $slug)->with('categories')->first();
         if ($request->bearerToken()) {
             try {
                 $token = $request->bearerToken();
@@ -147,6 +154,8 @@ class CourseService
             'status',
             'certificate_available',
             'preview_video',
+            'instructor_id',
+            'level',
         ]);
 
         if ($request->hasFile('thumbnail')) {
@@ -162,7 +171,9 @@ class CourseService
                 $data['slug'] = $data['slug'] . '-' . Str::random(5);
             }
         }
-        return $course->update($data);
+
+        $course->update($data);
+        return $course->fresh();
     }
 
 }

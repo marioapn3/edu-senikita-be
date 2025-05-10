@@ -18,12 +18,12 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         $categories = $this->categoryService->getAll($request);
-        return view('pages.categories.index', compact('categories'));
+        return view('pages.dashboard.categories.index', compact('categories'));
     }
 
     public function create()
     {
-        return view('pages.categories.create');
+        return view('pages.dashboard.categories.create');
     }
 
     public function store(Request $request)
@@ -35,7 +35,7 @@ class CategoryController extends Controller
     public function edit($id)
     {
         $category = $this->categoryService->getById($id);
-        return view('pages.categories.edit', compact('category'));
+        return view('pages.dashboard.categories.edit', compact('category'));
     }
 
     public function update(Request $request, $id)

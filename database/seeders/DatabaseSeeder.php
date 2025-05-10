@@ -33,9 +33,9 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin',
         ]);
         $this->call([
-            InstructorSeeder::class,
-            CategorySeeder::class,
-            CourseSeeder::class,
+            // InstructorSeeder::class,
+            // CategorySeeder::class,
+            // CourseSeeder::class,
         ]);
     }
 }

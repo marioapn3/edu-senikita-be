@@ -118,6 +118,8 @@
             </script>
         @endforeach
     @endif
+
+    <script src="./assets/vendor/preline/dist/preline.js"></script>
 </body>
 
 </html>

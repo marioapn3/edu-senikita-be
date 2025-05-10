@@ -92,6 +92,13 @@ class LessonService
             'duration',
         ]);
 
+        // validasi dulu apakah video_url adalah link youtube https://www.youtube.com/watch?v=5lbR3jXt00g
+        if(!filter_var($data['video_url'], FILTER_VALIDATE_URL)) {
+            throw new \Exception('Invalid video URL');
+        }
+
+        $data['video_url'] = str_replace('watch?v=', 'embed/', $data['video_url']);
+
         if($this->checkOrderByCourseId($data['order'], $data['course_id'])) {
             throw new \Exception('Order already exists for this course');
         }

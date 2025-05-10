@@ -9,6 +9,8 @@ export default {
         "./resources/**/*.blade.php",
         "./resources/**/*.js",
         "./resources/**/*.vue",
+        './node_modules/preline/dist/*.js', // <- tambahkan ini agar Preline UI bekerja
+
     ],
     theme: {
         extend: {

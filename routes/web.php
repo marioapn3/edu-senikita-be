@@ -1,8 +1,11 @@
 <?php
 
-use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Web\CategoryController;
 use App\Http\Controllers\Web\AuthenticationController;
 use App\Http\Controllers\Web\DashboardController;
+use App\Http\Controllers\Web\InstructorController;
+use App\Http\Controllers\Web\CourseController;
+use App\Http\Controllers\Web\LessonController;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
@@ -11,12 +14,12 @@ use Illuminate\Support\Facades\Validator;
 Route::get('/', function () {
     return redirect()->route('login');
 });
-Route::middleware('guest')->group(function () {
+Route::middleware(['guest'])->group(function () {
     Route::get('/login', [AuthenticationController::class, 'login'])->name('login');
     Route::post('/login', [AuthenticationController::class, 'authenticate'])->name('authenticate');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::prefix('dashboard')->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     });
@@ -27,6 +30,37 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [CategoryController::class, 'store'])->name('categories.store');
         Route::get('/{id}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
         Route::put('/{id}', [CategoryController::class, 'update'])->name('categories.update');
+        Route::delete('/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+    });
+
+    Route::prefix('instructors')->group(function () {
+        Route::get('/', [InstructorController::class, 'index'])->name('instructors.index');
+        Route::get('/create', [InstructorController::class, 'create'])->name('instructors.create');
+        Route::post('/', [InstructorController::class, 'store'])->name('instructors.store');
+        Route::get('/{id}/edit', [InstructorController::class, 'edit'])->name('instructors.edit');
+        Route::put('/{id}', [InstructorController::class, 'update'])->name('instructors.update');
+        Route::delete('/{id}', [InstructorController::class, 'destroy'])->name('instructors.destroy');
+    });
+
+    Route::prefix('courses')->group(function () {
+        Route::get('/', [CourseController::class, 'index'])->name('courses.index');
+        Route::get('/create', [CourseController::class, 'create'])->name('courses.create');
+        Route::post('/', [CourseController::class, 'store'])->name('courses.store');
+        Route::get('/{id}', [CourseController::class, 'show'])->name('courses.show');
+        Route::get('/{id}/edit', [CourseController::class, 'edit'])->name('courses.edit');
+        Route::put('/{id}', [CourseController::class, 'update'])->name('courses.update');
+        Route::delete('/{id}', [CourseController::class, 'destroy'])->name('courses.destroy');
+
+        // Lesson routes
+        Route::prefix('{courseId}/lessons')->group(function () {
+            Route::get('/', [LessonController::class, 'index'])->name('courses.lessons.index');
+            Route::get('/create', [LessonController::class, 'create'])->name('courses.lessons.create');
+            Route::post('/', [LessonController::class, 'store'])->name('courses.lessons.store');
+            Route::get('/{slug}', [LessonController::class, 'show'])->name('courses.lessons.show');
+            Route::get('/{id}/edit', [LessonController::class, 'edit'])->name('courses.lessons.edit');
+            Route::put('/{id}', [LessonController::class, 'update'])->name('courses.lessons.update');
+            Route::delete('/{id}', [LessonController::class, 'destroy'])->name('courses.lessons.destroy');
+        });
     });
 
     Route::post('/logout', [AuthenticationController::class, 'logout'])->name('logout');

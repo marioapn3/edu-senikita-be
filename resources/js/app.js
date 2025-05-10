@@ -6,6 +6,9 @@ import Alpine from 'alpinejs';
 // Import Chart.js
 import { Chart } from 'chart.js';
 
+import 'preline';
+
+
 // Import flatpickr
 import flatpickr from 'flatpickr';
 

@@ -23,6 +23,8 @@
         "chartjs-adapter-moment": "^1.0.1",
         "flatpickr": "^4.6.13",
         "lucide": "^0.509.0",
-        "moment": "^2.29.4"
+        "moment": "^2.29.4",
+        "preline": "^3.0.1",
+        "vanilla-calendar-pro": "^3.0.4"
     }
 }

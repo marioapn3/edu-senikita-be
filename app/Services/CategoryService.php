@@ -16,6 +16,11 @@ class CategoryService
     {
         $this->uploadService = $uploadService;
     }
+
+    public function all()
+    {
+        return Category::all();
+    }
     public function getAll($request)
     {
         $limit = $request->input('limit', 10);

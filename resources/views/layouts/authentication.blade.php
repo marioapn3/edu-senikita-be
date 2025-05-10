@@ -56,6 +56,7 @@
 
     </main>
 
+
     @include('components.toast')
 </body>
 

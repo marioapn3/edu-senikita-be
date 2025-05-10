@@ -2,20 +2,27 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Course extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'title',
         'description',
-        'certificate_available',
-        'thumbnail',
-        'slug',
-        'status',
         'level',
-        'instructor_id',
+        'duration',
+        'status',
+        'certificate_available',
         'preview_video',
+        'thumbnail',
+        'instructor_id',
+        'slug'
     ];
 
     public function getThumbnailAttribute($value)
@@ -27,20 +34,19 @@ class Course extends Model
         return asset('storage/' . $value);
     }
 
-    public function categories()
+    public function instructor(): BelongsTo
     {
-        return $this->belongsToMany(Category::class);
+        return $this->belongsTo(Instructor::class);
+    }
+
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(Category::class, 'category_course');
     }
 
     public function enrollments()
     {
         return $this->hasMany(Enrollment::class);
-    }
-
-
-    public function instructor()
-    {
-        return $this->belongsTo(Instructor::class, 'instructor_id', 'id');
     }
 
     public function sneakpeeks()
@@ -58,8 +64,8 @@ class Course extends Model
         return $this->hasMany(CourseRating::class);
     }
 
-    public function lessons(){
+    public function lessons(): HasMany
+    {
         return $this->hasMany(Lesson::class);
     }
-
 }
