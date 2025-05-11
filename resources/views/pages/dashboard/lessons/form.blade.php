@@ -90,8 +90,7 @@
                         <label class="block text-sm font-medium text-slate-700" for="content">Content</label>
                         <textarea class="mt-1 block w-full rounded-md border-slate-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('content') border-rose-500 @enderror"
                                   id="content"
-                                  name="content"
-                                  rows="5">{{ old('content', $lesson->content ?? '') }}</textarea>
+                                  name="content">{{ old('content', $lesson->content ?? '') }}</textarea>
                         @error('content')
                             <p class="mt-1 text-sm text-rose-500">{{ $message }}</p>
                         @enderror
@@ -140,3 +139,16 @@
     </div>
 </div>
 @endsection
+
+
+<script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        ClassicEditor
+            .create(document.querySelector('#content'))
+            .catch(error => {
+                console.error(error);
+            });
+    });
+</script>
+
