@@ -101,4 +101,8 @@ Route::middleware('auth:api')->prefix('certificates')->group(function () {
     Route::get('/', [CertificateController::class, 'getAll'])->name('certificates.getAll');
 });
 
+
+Route::get('/published', [FinalSubmissionController::class, 'allPublished'])->name('final-submissions.allPublished');
+
+
 require __DIR__ . '/debug.php';

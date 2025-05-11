@@ -18,6 +18,11 @@ class FinalSubmissionController extends Controller
     {
         $this->uploadService = $uploadService;
     }
+    public function allPublished()
+    {
+        $submissions = FinalSubmission::with('user')->where('is_published', true)->get();
+        return $this->successResponse($submissions);
+    }
     public function getByLessonId($lessonId)
     {
         $submissions = FinalSubmission::where('lesson_id', $lessonId)->get();
@@ -29,6 +34,7 @@ class FinalSubmissionController extends Controller
             'lesson_id' => 'required|exists:lessons,id',
             'submission' => 'required|string',
             'file_path' => 'nullable|file|max:10240',
+            'is_published' => 'required|boolean',
         ]);
 
         if ($validator->fails()) {
@@ -39,7 +45,7 @@ class FinalSubmissionController extends Controller
         $submission->user_id = Auth::id();
         $submission->lesson_id = $request->lesson_id;
         $submission->submission = $request->submission;
-
+        $submission->is_published = $request->is_published;
         if ($request->hasFile('file_path')) {
             $path = $this->uploadService->upload($request->file('file_path'), 'final-submissions');
             $submission->file_path = $path;
