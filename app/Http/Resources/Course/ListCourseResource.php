@@ -47,6 +47,13 @@ class ListCourseResource extends ResourceCollection
             "created_at" => $data->created_at->format('Y-m-d H:i:s'),
             "updated_at" => $data->updated_at->format('Y-m-d H:i:s'),
             'is_enrolled' => $data->is_enrolled ?? false,
+            'additional_materials' => $data->additionalMaterials->map(function ($material) {
+                return [
+                    'id' => $material->id,
+                    'title' => $material->title,
+                    'file_path' => $material->file_path,
+                ];
+            })->toArray(),
         ];
     }
 

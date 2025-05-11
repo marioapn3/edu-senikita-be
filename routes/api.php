@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\CertificateController;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\CourseRatingController;
 use App\Http\Controllers\Api\EnrollmentController;
@@ -95,5 +96,7 @@ Route::middleware('auth:api')->prefix('final-submissions')->group(function () {
     Route::post('/', [FinalSubmissionController::class, 'store'])->name('final-submissions.store');
     Route::put('/score/{id}', [FinalSubmissionController::class, 'score'])->name('final-submissions.score');
 });
+
+Route::get('certificate-test', [CertificateController::class, 'test']);
 
 require __DIR__ . '/debug.php';
