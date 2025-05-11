@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Pagination\PaginationRequest;
+use App\Models\Course;
 use App\Services\LessonService;
 use Exception;
 use Illuminate\Http\Request;
@@ -37,8 +38,30 @@ class LessonController extends Controller
     }
     public function showByCourseId(Request $request,$course_id){
         try {
+            $course = Course::find($course_id);
+
+            if (!$course) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Course not found',
+                    'errors' => []
+                ], 404);
+            }
+
             $data = $this->lessonService->getByCourseId($course_id, $request);
-            return $this->successResponse($data, 'Lesson retrieved successfully');
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Lesson retrieved successfully',
+                'data' => $data,
+                'additional_materials' => $course->additionalMaterials->map(function ($material) {
+                    return [
+                        'id' => $material->id,
+                        'title' => $material->title,
+                        'file_path' => $material->file_path,
+                    ];
+                })->toArray(),
+            ]);
         }catch (Exception $e) {
             return $this->exceptionError($e->getMessage());
         }
