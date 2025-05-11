@@ -103,7 +103,6 @@ class FinalSubmissionController extends Controller
                        ->setOutputFormat('png')
                        ->saveImage($pdfPath . '/' . $imageFilename);
 
-            // Simpan path gambar ke database
             $certificate->certificate_image = 'storage/certificate/' . $imageFilename;
             $certificate->save();
 
@@ -115,7 +114,7 @@ class FinalSubmissionController extends Controller
                 'certificate_url' => $certificate->certificate_pdf,
             ];
 
-            Mail::send('email.certificate', $emailData, function ($message) use ($emailData, $enrollment) {
+            Mail::send('email.certificate', ['data' => $emailData], function ($message) use ($emailData, $enrollment) {
                 $message->to($enrollment->user->email)
                         ->subject('Sertifikat Kelulusan - Widya Senikita');
             });
