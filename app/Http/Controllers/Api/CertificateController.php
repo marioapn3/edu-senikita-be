@@ -13,7 +13,14 @@ class CertificateController extends Controller
 
     public function getAll(Request $request)
     {
-        $certificates = Certificate::with('enrollment.course')->where('user_id', $request->user()->id)->get();
+        $userId = $request->user()->id;
+        $certificates = Certificate::with('enrollment.course')
+            ->whereHas('enrollment', function($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })
+            ->get();
         return $this->successResponse($certificates, 'Certificates retrieved successfully');
     }
+
+
 }
