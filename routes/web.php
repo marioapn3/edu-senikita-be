@@ -14,6 +14,7 @@ use App\Http\Controllers\Web\SneakpeekController;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
 
 
 Route::get('/', function () {
@@ -88,9 +89,25 @@ Route::middleware(['auth'])->group(function () {
 
     });
 
-
-
     Route::post('/logout', [AuthenticationController::class, 'logout'])->name('logout');
+});
+
+// Test route for sending certificate email
+Route::get('/test-certificate-email', function () {
+    $data = [
+        'nama' => 'John Doe',
+        'course' => 'Laravel Masterclass',
+        'tanggal_penyelesaian' => now()->format('d F Y'),
+        'certificate_id' => 'CERT-' . strtoupper(uniqid()),
+        'certificate_url' => 'https://example.com/certificate.pdf'
+    ];
+
+    Mail::send('email.certificate', ['data' => $data], function ($message) {
+        $message->to('mario.fransisko68@gmail.com')
+                ->subject('Sertifikat Kelulusan - Widya Senikita');
+    });
+
+    return 'Test email sent!';
 });
 
 

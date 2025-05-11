@@ -11,6 +11,7 @@ use App\Models\Lesson;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Spatie\PdfToImage\Pdf as PdfToImage;
 
@@ -105,6 +106,21 @@ class FinalSubmissionController extends Controller
             // Simpan path gambar ke database
             $certificate->certificate_image = 'storage/certificate/' . $imageFilename;
             $certificate->save();
+
+            $emailData =[
+                'nama' => $enrollment->user->name,
+                'course' => $course->title,
+                'tanggal_penyelesaian' => now()->format('d F Y'),
+                'certificate_id' => $certificateNumber,
+                'certificate_url' => $certificate->certificate_pdf,
+            ];
+
+            Mail::send('email.certificate', $emailData, function ($message) use ($emailData, $enrollment) {
+                $message->to($enrollment->user->email)
+                        ->subject('Sertifikat Kelulusan - Widya Senikita');
+            });
+
+
         }
 
         return redirect()->back()->with('success', 'Final submission updated successfully');
