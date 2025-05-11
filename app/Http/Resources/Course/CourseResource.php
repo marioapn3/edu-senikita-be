@@ -43,6 +43,13 @@ class CourseResource extends JsonResource
             "enrolled_count" => $this->enrollments->count(),
             "lessons_count" => $this->lessons->count(),
             "is_enrolled" => $this->is_enrolled ?? false,
+            "additional_materials" => $this->additionalMaterials->map(function ($material) {
+                return [
+                    'id' => $material->id,
+                    'title' => $material->title,
+                    'file_path' => $material->file_path,
+                ];
+            })->toArray(),
             "created_at" => $this->created_at->format('Y-m-d H:i:s'),
             "updated_at" => $this->updated_at->format('Y-m-d H:i:s'),
         ];

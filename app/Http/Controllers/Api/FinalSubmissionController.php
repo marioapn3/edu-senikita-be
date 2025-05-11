@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\FinalSubmission;
+use App\Models\Lesson;
 use App\Services\UploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -65,6 +66,14 @@ class FinalSubmissionController extends Controller
         $submission->feedback = $request->feedback;
         $submission->status = $request->status;
         $submission->save();
+
+
+        if($submission->status == 'approved'){
+            $lesson = Lesson::find($submission->lesson_id);
+            $lesson->users()->attach(Auth::id(), ['is_completed' => true, 'completed_at' => now()]);
+
+        }
+
 
         return $this->successResponse($submission, 'Final submission updated successfully');
     }

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Web\AdditionalMaterialController;
+use App\Http\Controllers\Web\FinalSubmissionController;
 use App\Http\Controllers\Web\CategoryController;
 use App\Http\Controllers\Web\AuthenticationController;
 use App\Http\Controllers\Web\DashboardController;
@@ -78,6 +80,11 @@ Route::middleware(['auth'])->group(function () {
         Route::post('requirement/{courseId}', [RequirementController::class, 'create'])->name('courses.requirement.create');
         Route::put('requirement/{requirementId}', [RequirementController::class, 'update'])->name('courses.requirement.update');
         Route::delete('requirement/{requirementId}', [RequirementController::class, 'delete'])->name('courses.requirement.delete');
+
+        Route::put('final-submission/{submissionId}', [FinalSubmissionController::class, 'score'])->name('final-submissions.score');
+
+        Route::post('additional-material', [AdditionalMaterialController::class, 'create'])->name('courses.additional-material.create');
+        Route::delete('additional-material/{additionalMaterialId}', [AdditionalMaterialController::class, 'delete'])->name('courses.additional-material.delete');
 
     });
 

@@ -244,7 +244,9 @@
                                         <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
                                             <div class="mt-3">
                                                 <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">Score Submission</h3>
-                                                <form id="scoreForm" class="space-y-4">
+                                                <form method="POST" id="scoreForm" class="space-y-4">
+                                                    @csrf
+                                                    @method('PUT')
                                                     <input type="hidden" id="submissionId" name="submissionId">
                                                     <div>
                                                         <label for="score" class="block text-sm font-medium text-gray-700">Score (0-100)</label>
@@ -443,6 +445,8 @@
     // Score Modal functions
     function openScoreModal(submissionId) {
         document.getElementById('submissionId').value = submissionId;
+        const form = document.getElementById('scoreForm');
+        form.action = `/courses/final-submission/${submissionId}`;
         document.getElementById('scoreModal').classList.remove('hidden');
     }
 
@@ -450,38 +454,6 @@
         document.getElementById('scoreModal').classList.add('hidden');
         document.getElementById('scoreForm').reset();
     }
-
-    // Score form submission
-    document.getElementById('scoreForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-
-        const submissionId = document.getElementById('submissionId').value;
-        const formData = {
-            score: document.getElementById('score').value,
-            feedback: document.getElementById('feedback').value,
-            status: document.getElementById('status').value,
-        };
-
-        try {
-            const response = await fetch(`/api/final-submissions/${submissionId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify(formData)
-            });
-
-            if (response.ok) {
-                window.location.reload();
-            } else {
-                alert('Failed to submit score. Please try again.');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('An error occurred. Please try again.');
-        }
-    });
 </script>
 
 @endsection
