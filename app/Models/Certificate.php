@@ -22,4 +22,14 @@ class Certificate extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function getCertificateImageAttribute($value)
+    {
+        return asset($value);
+    }
+
+    public function getCertificatePdfAttribute($value)
+    {
+        return asset($value);
+    }
 }
