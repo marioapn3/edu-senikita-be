@@ -346,7 +346,7 @@
                 @csrf
                 <div>
                     <h3 class="text-lg font-medium leading-6 text-gray-900" id="additional-material-modal-title">Add Material</h3>
-                    <input type="text" name="course_id" value="{{ $course->id }}">
+                    <input type="hidden" name="course_id" value="{{ $course->id }}">
                     <div class="mt-4">
                         <label for="material-title" class="block text-sm font-medium text-gray-700">Title</label>
                         <input type="text" id="material-title" name="title" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
