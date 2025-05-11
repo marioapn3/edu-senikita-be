@@ -63,12 +63,13 @@ Route::controller(CategoryController::class)->group(function () {
 Route::controller(LessonController::class)->group(function () {
     Route::get('lessons', 'index');
     Route::post('lessons', 'store');
-    Route::get('lessons/{id}', 'show');
-    Route::put('lessons/{id}', 'update');
-    Route::delete('lessons/{id}', 'destroy');
+    Route::get('lessons/final', 'getFinalLessons');
     Route::get('lessons/slug/{slug}', 'showBySlug');
     Route::post('lessons/{lesson_id}/complete', 'completeLesson');
     Route::get('course/lessons/{course_id}', 'showByCourseId');
+    Route::get('lessons/{id}', 'show');
+    Route::put('lessons/{id}', 'update');
+    Route::delete('lessons/{id}', 'destroy');
 });
 
 // Enrollment Routes

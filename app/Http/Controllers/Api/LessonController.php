@@ -16,7 +16,7 @@ class LessonController extends Controller
     {
         $this->lessonService = $lessonService;
         $this->middleware(['auth:api', 'role:admin'])->only(['store', 'update', 'destroy']);
-        $this->middleware(['auth:api'])->only(['showByCourseId', 'completeLesson']);
+        $this->middleware(['auth:api'])->only(['showByCourseId', 'completeLesson', 'getFinalLessons']);
     }
 
     public function index(PaginationRequest $request){
@@ -107,6 +107,16 @@ class LessonController extends Controller
             $data = $this->lessonService->completeLesson($lesson_id, $request->user()->id);
             return $this->successResponse($data, 'Lesson completed successfully');
         }catch (Exception $e) {
+            return $this->exceptionError($e->getMessage());
+        }
+    }
+
+    public function getFinalLessons(Request $request)
+    {
+        try {
+            $data = $this->lessonService->getFinalLessons($request->user()->id);
+            return $this->successResponse($data, 'Final lessons retrieved successfully');
+        } catch (Exception $e) {
             return $this->exceptionError($e->getMessage());
         }
     }

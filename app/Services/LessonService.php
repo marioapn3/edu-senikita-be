@@ -165,4 +165,33 @@ class LessonService
 
         return $lesson;
     }
+
+    public function getFinalLessons($userId)
+    {
+        return Lesson::where('type', 'final')
+            ->whereHas('course.enrollments', function ($query) use ($userId) {
+                $query->where('user_id', operator: $userId);
+            })
+            ->with(['course', 'users' => function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            }])
+            ->get()
+            ->map(function ($lesson) use ($userId) {
+                $completed = $lesson->users->first() ? $lesson->users->first()->pivot->is_completed : false;
+                return [
+                    'id' => $lesson->id,
+                    'title' => $lesson->title,
+                    'slug' => $lesson->slug,
+                    'description' => $lesson->description,
+                    'course' => [
+                        'id' => $lesson->course->id,
+                        'title' => $lesson->course->title,
+                        'slug' => $lesson->course->slug,
+                        'thumbnail' => $lesson->course->thumbnail,
+                    ],
+                    'is_completed' => $completed,
+                    'completed_at' => $lesson->users->first() ? $lesson->users->first()->pivot->completed_at : null,
+                ];
+            });
+    }
 }
