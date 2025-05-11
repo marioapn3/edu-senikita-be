@@ -74,8 +74,8 @@ class FinalSubmissionController extends Controller
                 'tanggal_penyelesaian' => now()->format('d F Y'),
             ];
 
-            // Pastikan direktori pdf/certificate sudah ada
-            $pdfPath = public_path('pdf/certificate');
+            // Pastikan direktori storage/app/public/certificate sudah ada
+            $pdfPath = storage_path('app/public/certificate');
             if (!file_exists($pdfPath)) {
                 mkdir($pdfPath, 0755, true);
             }
@@ -94,7 +94,7 @@ class FinalSubmissionController extends Controller
             $pdf->save($pdfPath . '/' . $pdfFilename);
 
             // Simpan path PDF ke database
-            $certificate->certificate_pdf = 'pdf/certificate/' . $pdfFilename;
+            $certificate->certificate_pdf = 'storage/certificate/' . $pdfFilename;
 
             // Convert PDF ke gambar (png)
             $pdfToImage = new PdfToImage($pdfPath . '/' . $pdfFilename);
@@ -103,7 +103,7 @@ class FinalSubmissionController extends Controller
                        ->saveImage($pdfPath . '/' . $imageFilename);
 
             // Simpan path gambar ke database
-            $certificate->certificate_image = 'pdf/certificate/' . $imageFilename;
+            $certificate->certificate_image = 'storage/certificate/' . $imageFilename;
             $certificate->save();
         }
 
