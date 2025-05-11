@@ -76,7 +76,7 @@
                             <th class="px-2 py-3 font-medium text-slate-500">Title</th>
                             <th class="px-2 py-3 font-medium text-slate-500">Type</th>
                             <th class="px-2 py-3 font-medium text-slate-500">Duration</th>
-                            <th class="px-2 py-3 font-medium text-slate-500">Status</th>
+                            {{-- <th class="px-2 py-3 font-medium text-slate-500">Status</th> --}}
                             <th class="px-2 py-3 font-medium text-slate-500">Actions</th>
                         </tr>
                     </thead>
@@ -89,11 +89,11 @@
                             </td>
                             <td class="px-2 py-3 text-sm text-slate-500">{{ ucfirst($lesson['type']) }}</td>
                             <td class="px-2 py-3 text-sm text-slate-500">{{ $lesson['duration'] }} minutes</td>
-                            <td class="px-2 py-3">
+                            {{-- <td class="px-2 py-3">
                                 <span class="inline-flex px-2 py-1 text-xs font-medium rounded-full {{ $lesson['is_completed'] ? 'bg-emerald-100 text-emerald-600' : 'bg-amber-100 text-amber-600' }}">
                                     {{ $lesson['is_completed'] ? 'Completed' : 'Not Started' }}
                                 </span>
-                            </td>
+                            </td> --}}
                             <td class="px-2 py-3">
                                 <div class="flex items-center space-x-2">
                                     <a href="{{ route('courses.lessons.show', [$course->id, $lesson['slug']]) }}"

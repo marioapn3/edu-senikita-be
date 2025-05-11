@@ -19,7 +19,7 @@ class AdditionalMaterialController extends Controller
         try{
             $request->validate([
                 'title' => 'required|string|max:255',
-                'file' => 'required|file|mimes:pdf,doc,docx,txt,jpg,jpeg,png,gif,svg,webp',
+                'file' => 'required|file|mimes:pdf,doc,docx,txt,jpg,jpeg,png,gif,svg,webp,mp3',
                 'course_id' => 'required|exists:courses,id',
             ]);
             $additionalMaterial = $this->additionalMaterialService->create($request);

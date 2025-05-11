@@ -17,7 +17,9 @@ class QuizController extends Controller
 
     public function getQuizByLessonId($lessonId)
     {
-        $quiz = Quiz::with('questions.answers')->where('lesson_id', $lessonId)->first();
+        $quiz = Quiz::with(['questions.answers', 'attempts' => function($query) {
+            $query->where('user_id', Auth::id());
+        }])->where('lesson_id', $lessonId)->first();
 
         return $this->successResponse($quiz);
     }

@@ -21,7 +21,7 @@ class SneakpeekController extends Controller
         toastr()->success('Sneakpeek created successfully');
         return redirect()->back();
        } catch (\Exception $e) {
-        toastr()->error('Sneakpeek creation failed');
+        toastr()->error($e->getMessage());
         return redirect()->back();
        }
     }
