@@ -97,6 +97,8 @@ Route::middleware('auth:api')->prefix('final-submissions')->group(function () {
     Route::put('/score/{id}', [FinalSubmissionController::class, 'score'])->name('final-submissions.score');
 });
 
-Route::get('certificate-test', [CertificateController::class, 'test']);
+Route::middleware('auth:api')->prefix('certificates')->group(function () {
+    Route::get('/', [CertificateController::class, 'getAll'])->name('certificates.getAll');
+});
 
 require __DIR__ . '/debug.php';
