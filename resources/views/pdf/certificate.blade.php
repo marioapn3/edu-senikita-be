@@ -158,20 +158,20 @@
                 <div class="cert-content">
                     <div class="cert-label">Sertifikat ini ditujukan kepada</div>
                     <div class="cert-user">
-                        <div class="cert-user-name">John Doe</div>
+                        <div class="cert-user-name">{{ $nama }}</div>
                     </div>
                     <div class="cert-achievement">Telah berhasil menyelesaikan pelatihan</div>
-                    <div class="cert-course-name">Mencanting Batik Cendrawasih</div>
+                    <div class="cert-course-name">{{ $course }}</div>
                     <div class="cert-signature">
-                        <div class="">Minggu, 11 Mei 2025</div>
+                        <div class="">{{ $tanggal }}</div>
                         <div class="cert-signature-sign">
                             <img src="https://user-images.githubusercontent.com/116018376/265188266-256dfa47-0792-40e6-885e-3870fad0efe7.png" alt="" width="230">
                         </div>
                         <div style="font-weight: bold;">Mario Aprilnino Prasetyo</div>
-                        <div>Chief Technology Officer Devlearn</div>
+                        <div>Chief Technology Officer Widya Senikita</div>
                         <div class="cert-footer">
-                            <div class="cert-qr-token">Tanggal Penyelesaian : 11 Mei 2025</div>
-                            <div class="cert-qr-token">Sertifikat ID : CERT123456789</div>
+                            <div class="cert-qr-token">Tanggal Penyelesaian : {{ $tanggal_penyelesaian }}</div>
+                            <div class="cert-qr-token">Sertifikat ID : {{ $certificate_id }}</div>
                             <div class="cert-qr-label">Sertifikat ini sebagai tanda bahwa pengguna telah menyelesaikan pelatihan kursus dari awal hingga akhir</div>
                         </div>
                     </div>

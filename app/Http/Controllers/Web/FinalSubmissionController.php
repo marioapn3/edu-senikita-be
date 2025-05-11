@@ -3,11 +3,17 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\Certificate;
+use App\Models\Course;
+use App\Models\Enrollment;
 use App\Models\FinalSubmission;
 use App\Models\Lesson;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Spatie\PdfToImage\Pdf as PdfToImage;
+
 
 class FinalSubmissionController extends Controller
 {
@@ -32,10 +38,75 @@ class FinalSubmissionController extends Controller
         $lesson = Lesson::find($submission->lesson_id);
         $lesson->users()->attach(Auth::id(), ['is_completed' => true, 'completed_at' => now()]);
 
-        if($submission->status == 'approved'){
+        if ($submission->status == 'approved') {
             $lesson = Lesson::find($submission->lesson_id);
-            $lesson->users()->attach(Auth::id(), ['is_completed' => true, 'completed_at' => now()]);
+            if (!$lesson) return;
+
+            $lesson->users()->attach(Auth::id(), [
+                'is_completed' => true,
+                'completed_at' => now(),
+            ]);
+
+            $course = Course::find($lesson->course_id);
+            if (!$course) return;
+
+            $enrollment = Enrollment::where('user_id', $submission->user_id)
+                                    ->where('course_id', $course->id)
+                                    ->first();
+            if (!$enrollment) return;
+
+            $enrollment->status = 'completed';
+            $enrollment->completed_at = now();
+            $enrollment->save();
+
+            $certificateNumber = 'CERT-' . $enrollment->id . '-' . now()->format('YmdHis');
+
+            $certificate = Certificate::create([
+                'enrollment_id' => $enrollment->id,
+                'certificate_number' => $certificateNumber,
+            ]);
+
+            $dataPdf = [
+                'nama' => $enrollment->user->name,
+                'course' => $course->title,
+                'tanggal' => now()->format('d F Y'),
+                'certificate_id' => $certificateNumber,
+                'tanggal_penyelesaian' => now()->format('d F Y'),
+            ];
+
+            // Pastikan direktori pdf/certificate sudah ada
+            $pdfPath = public_path('pdf/certificate');
+            if (!file_exists($pdfPath)) {
+                mkdir($pdfPath, 0755, true);
+            }
+
+            $pdfFilename = $certificateNumber . '.pdf';
+            $imageFilename = $certificateNumber . '.png';
+
+            $pdf = Pdf::setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true
+            ])
+            ->loadView('pdf.certificate', $dataPdf)
+            ->setPaper('a4', 'landscape');
+
+            // Simpan PDF
+            $pdf->save($pdfPath . '/' . $pdfFilename);
+
+            // Simpan path PDF ke database
+            $certificate->certificate_pdf = 'pdf/certificate/' . $pdfFilename;
+
+            // Convert PDF ke gambar (png)
+            $pdfToImage = new PdfToImage($pdfPath . '/' . $pdfFilename);
+            $pdfToImage->setPage(1)
+                       ->setOutputFormat('png')
+                       ->saveImage($pdfPath . '/' . $imageFilename);
+
+            // Simpan path gambar ke database
+            $certificate->certificate_image = 'pdf/certificate/' . $imageFilename;
+            $certificate->save();
         }
+
         return redirect()->back()->with('success', 'Final submission updated successfully');
     }
 }
