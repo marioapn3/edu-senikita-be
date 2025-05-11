@@ -25,6 +25,7 @@ class QuizController extends Controller
         }])->where('lesson_id', $lessonId)->first();
 
         $history = [];
+        $latestAttempt = null;
         if ($quiz && $quiz->attempts->isNotEmpty()) {
             $latestAttempt = $quiz->attempts->first();
             foreach ($quiz->questions as $question) {
@@ -41,7 +42,18 @@ class QuizController extends Controller
 
         return $this->successResponse([
             'quiz' => $quiz,
-            'history' => $history
+            'history' => $history,
+            'latest_attempt' => $latestAttempt ? [
+                'id' => $latestAttempt->id,
+                'user_id' => $latestAttempt->user_id,
+                'quiz_id' => $latestAttempt->quiz_id,
+                'score' => $latestAttempt->score,
+                'is_passed' => $latestAttempt->is_passed,
+                'started_at' => $latestAttempt->started_at,
+                'completed_at' => $latestAttempt->completed_at,
+                'created_at' => $latestAttempt->created_at,
+                'updated_at' => $latestAttempt->updated_at
+            ] : null
         ]);
     }
 
