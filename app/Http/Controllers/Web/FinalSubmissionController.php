@@ -118,8 +118,6 @@ class FinalSubmissionController extends Controller
                 $message->to($enrollment->user->email)
                         ->subject('Sertifikat Kelulusan - Widya Senikita');
             });
-
-
         }
 
         return redirect()->back()->with('success', 'Final submission updated successfully');

@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class UserQuizAttempt extends Model
 {
+    protected $table = 'user_quiz_attempts';
     protected $fillable = [
         'user_id',
         'quiz_id',
@@ -31,5 +33,10 @@ class UserQuizAttempt extends Model
     public function quiz(): BelongsTo
     {
         return $this->belongsTo(Quiz::class);
+    }
+
+    public function answers(): HasMany
+    {
+        return $this->hasMany(UserQuizAnswer::class);
     }
 }

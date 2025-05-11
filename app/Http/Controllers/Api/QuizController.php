@@ -8,6 +8,7 @@ use App\Models\Quiz;
 use App\Models\QuizQuestion;
 use App\Models\QuizAnswer;
 use App\Models\UserQuizAttempt;
+use App\Models\UserQuizAnswer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -18,10 +19,30 @@ class QuizController extends Controller
     public function getQuizByLessonId($lessonId)
     {
         $quiz = Quiz::with(['questions.answers', 'attempts' => function($query) {
-            $query->where('user_id', Auth::id());
+            $query->where('user_id', Auth::id())
+                  ->with(['answers.question', 'answers.answer'])
+                  ->latest();
         }])->where('lesson_id', $lessonId)->first();
 
-        return $this->successResponse($quiz);
+        $history = [];
+        if ($quiz && $quiz->attempts->isNotEmpty()) {
+            $latestAttempt = $quiz->attempts->first();
+            foreach ($quiz->questions as $question) {
+                $userAnswer = $latestAttempt->answers->firstWhere('quiz_question_id', $question->id);
+                $history[] = [
+                    'question' => $question,
+                    'user_answer' => $userAnswer ? [
+                        'selected_answer' => $userAnswer->answer,
+                        'is_correct' => $userAnswer->is_correct
+                    ] : null
+                ];
+            }
+        }
+
+        return $this->successResponse([
+            'quiz' => $quiz,
+            'history' => $history
+        ]);
     }
 
     public function submitAttempt(Request $request, $lessonId)
@@ -53,9 +74,19 @@ class QuizController extends Controller
 
             if ($question->type === 'multiple_choice' || $question->type === 'true_false') {
                 $selectedAnswer = QuizAnswer::find($answer['quiz_answer_id']);
-                if ($selectedAnswer && $selectedAnswer->is_correct) {
+                $isCorrect = $selectedAnswer && $selectedAnswer->is_correct;
+
+                if ($isCorrect) {
                     $totalScore += $question->points;
                 }
+
+                // Store the user's answer
+                UserQuizAnswer::create([
+                    'user_quiz_attempt_id' => $attempt->id,
+                    'quiz_question_id' => $question->id,
+                    'quiz_answer_id' => $selectedAnswer->id,
+                    'is_correct' => $isCorrect,
+                ]);
             }
         }
 
@@ -69,14 +100,13 @@ class QuizController extends Controller
             $lesson->users()->attach(Auth::id(), ['is_completed' => true, 'completed_at' => now()]);
         }
 
-
-
         return response()->json([
             'message' => 'Quiz attempt submitted successfully',
             'data' => [
                 'score' => $totalScore,
                 'max_score' => $maxScore,
                 'is_passed' => $attempt->is_passed,
+                'attempt' => $attempt->load(['answers.question', 'answers.answer']),
             ]
         ]);
     }
