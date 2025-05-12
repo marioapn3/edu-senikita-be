@@ -16,6 +16,7 @@ class FinalSubmission extends Model
         'feedback',
         'score',
         'is_published',
+        'type',
     ];
 
     protected $casts = [

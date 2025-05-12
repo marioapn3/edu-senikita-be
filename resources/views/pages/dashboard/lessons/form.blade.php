@@ -1,3 +1,4 @@
+
 @extends('layouts.app')
 
 @section('content')
@@ -69,6 +70,24 @@
                             <option value="final" {{ (old('type', $lesson->type ?? '') == 'final') ? 'selected' : '' }}>Final</option>
                         </select>
                         @error('type')
+                            <p class="mt-1 text-sm text-rose-500">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- submission type --}}
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700" for="submission_type">Submission Type</label>
+                        <small class="text-gray-500">Pilih jika type final</small>
+                        <select class="mt-1 block w-full rounded-md border-slate-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('submission_type') border-rose-500 @enderror"
+                                id="submission_type"
+                                name="submission_type">
+
+
+                            <option value="">Pilih jika type final</option>
+                            <option value="text" {{ (old('submission_type', $lesson->submission_type ?? '') == 'text') ? 'selected' : '' }}>Text</option>
+                            <option value="file" {{ (old('submission_type', $lesson->submission_type ?? '') == 'file') ? 'selected' : '' }}>File</option>
+                        </select>
+                        @error('submission_type')
                             <p class="mt-1 text-sm text-rose-500">{{ $message }}</p>
                         @enderror
                     </div>

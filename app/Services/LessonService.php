@@ -92,6 +92,7 @@ class LessonService
             'content',
             'video_url',
             'duration',
+            'submission_type',
         ]);
 
         if(isset($data['video_url'])) {
@@ -145,6 +146,7 @@ class LessonService
             'content',
             'video_url',
             'duration',
+            'submission_type',
         ]);
 
         if(isset($data['video_url'])) {
