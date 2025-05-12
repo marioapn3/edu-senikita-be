@@ -32,10 +32,23 @@ class FinalSubmissionController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'lesson_id' => 'required|exists:lessons,id',
-            'submission' => 'required|string',
+            'submission' => 'nullable|string',
             'file_path' => 'nullable|file|max:10240',
             'is_published' => 'required|boolean',
         ]);
+
+        $lesson = Lesson::find($request->lesson_id);
+        if($lesson->submission_type == 'file'){
+            if(!$request->hasFile('file_path')){
+                $validator->errors()->add('file_path', 'File is required');
+            }
+        }
+
+        if($lesson->submission_type == 'text'){
+            if(!$request->has('submission')){
+                $validator->errors()->add('submission', 'Submission is required');
+            }
+        }
 
         if ($validator->fails()) {
             return $this->exceptionError($validator->errors(), 422);
@@ -46,6 +59,7 @@ class FinalSubmissionController extends Controller
         $submission->lesson_id = $request->lesson_id;
         $submission->submission = $request->submission;
         $submission->is_published = $request->is_published;
+        $submission->type = $lesson->submission_type;
         if ($request->hasFile('file_path')) {
             $path = $this->uploadService->upload($request->file('file_path'), 'final-submissions');
             $submission->file_path = $path;
