@@ -23,9 +23,13 @@ class FinalSubmissionController extends Controller
         $submissions = FinalSubmission::with('user')->where('is_published', true)->get();
         return $this->successResponse($submissions);
     }
-    public function getByLessonId($lessonId)
+    public function getByLessonId(Request $request, $lessonId)
     {
-        $submissions = FinalSubmission::where('lesson_id', $lessonId)->get();
+        $submissions = FinalSubmission::where('lesson_id', $lessonId);
+        if(Auth::user()){
+            $submissions->where('user_id', Auth::id());
+        }
+        $submissions = $submissions->get();
         return $this->successResponse($submissions);
     }
     public function store(Request $request)
