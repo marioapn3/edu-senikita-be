@@ -61,6 +61,7 @@ class LessonService
                     'created_at' => $lesson->created_at,
                     'updated_at' => $lesson->updated_at,
                     'completed_at' => $lesson->users->first() ? $lesson->users->first()->pivot->completed_at : null,
+                    'submission_type' => $lesson->submission_type,
                 ];
             });
 

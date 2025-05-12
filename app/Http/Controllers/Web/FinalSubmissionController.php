@@ -36,9 +36,6 @@ class FinalSubmissionController extends Controller
         $submission->status = $request->status;
         $submission->save();
 
-        $lesson = Lesson::find($submission->lesson_id);
-        $lesson->users()->attach(Auth::id(), ['is_completed' => true, 'completed_at' => now()]);
-
         if ($submission->status == 'approved') {
             $lesson = Lesson::find($submission->lesson_id);
             if (!$lesson) return;
