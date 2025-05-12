@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Lesson;
 use App\Models\Course;
+use App\Models\LessonUser;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -46,11 +47,12 @@ class LessonService
             }])
             ->get()
             ->map(function ($lesson) use ($userId) {
-                $completed = $lesson->users->first() ? $lesson->users->first()->pivot->is_completed : false;
+                $user = $lesson->users->first();
                 return [
                     'id' => $lesson->id,
                     'title' => $lesson->title,
-                    'is_completed' => $completed ? true : false,
+                    'is_completed' => $user && $user->pivot->completed_at ? true : false,
+                    'completed_at' => $user ? $user->pivot->completed_at : null,
                     'slug' => $lesson->slug,
                     'order' => $lesson->order,
                     'type' => $lesson->type,
@@ -60,7 +62,6 @@ class LessonService
                     'duration' => $lesson->duration,
                     'created_at' => $lesson->created_at,
                     'updated_at' => $lesson->updated_at,
-                    'completed_at' => $lesson->users->first() ? $lesson->users->first()->pivot->completed_at : null,
                     'submission_type' => $lesson->submission_type,
                 ];
             });

@@ -40,7 +40,8 @@ class FinalSubmissionController extends Controller
             $lesson = Lesson::find($submission->lesson_id);
             if (!$lesson) return;
 
-            $lesson->users()->attach(Auth::id(), [
+
+            $lesson->users()->attach($submission->user_id, [
                 'is_completed' => true,
                 'completed_at' => now(),
             ]);
