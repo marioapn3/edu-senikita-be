@@ -49,6 +49,7 @@
                                 <th class="px-2 py-3 font-medium text-slate-500">User</th>
                                 <th class="px-2 py-3 font-medium text-slate-500">Lesson</th>
                                 <th class="px-2 py-3 font-medium text-slate-500">File</th>
+                                <th class="px-2 py-3 font-medium text-slate-500">Preview</th>
                                 <th class="px-2 py-3 font-medium text-slate-500">Status</th>
                                 <th class="px-2 py-3 font-medium text-slate-500">Actions</th>
                             </tr>
@@ -70,6 +71,11 @@
                                     @else
                                         No file
                                     @endif
+                                </td>
+                                <td class="px-2 py-3">
+                                  @if ($submission->file_path)
+                                    <img src="{{ asset($submission->file_path) }}" alt="Preview" class="w-16 h-16">
+                                  @endif
                                 </td>
                                 <td class="px-2 py-3">
                                     <span class="inline-flex px-2 py-1 text-xs font-medium rounded-full {{ $submission->is_published ? 'bg-emerald-100 text-emerald-600' : 'bg-amber-100 text-amber-600' }}">
