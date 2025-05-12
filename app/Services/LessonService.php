@@ -40,6 +40,7 @@ class LessonService
     {
         $userId = $request->user()->id;
         $lessons = Lesson::where('course_id', $id)
+            ->orderBy('order', 'asc')
             ->with(['users' => function ($query) use ($userId) {
                 $query->where('user_id', $userId);
             }])

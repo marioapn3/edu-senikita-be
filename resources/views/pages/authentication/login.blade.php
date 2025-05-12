@@ -15,12 +15,12 @@
             <div>
                 <label for="email" class="block mb-1 text-sm font-medium">{{ __('Email') }}</label>
                 <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus
-                    class="w-full form-input" />
+                    class="w-full form-input" placeholder="example@email.com" />
             </div>
             <div>
                 <label for="password" class="block mb-1 text-sm font-medium">{{ __('Password') }}</label>
                 <input id="password" type="password" name="password" required autocomplete="current-password"
-                    class="w-full form-input" />
+                    class="w-full form-input" placeholder="********" />
             </div>
         </div>
 
