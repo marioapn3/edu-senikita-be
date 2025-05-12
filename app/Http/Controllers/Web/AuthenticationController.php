@@ -32,11 +32,11 @@ class AuthenticationController extends Controller
                 return redirect()->intended('dashboard');
             }
 
-            return back()->withErrors([
-                'email' => 'The provided credentials do not match our records.',
-            ])->onlyInput('email');
+            toastr()->error('Invalid credentials');
+            return redirect()->back();
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat login');
+            toastr()->error($e->getMessage());
+            return redirect()->back();
         }
     }
 }

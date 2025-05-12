@@ -206,76 +206,79 @@
                                     <h5 class="text-lg font-semibold text-gray-900">Final Submission</h5>
                                 </div>
 
-                                {{-- looping $lesson->submissions --}}
-
-                                    <div class="flex items-center justify-between py-3 px-4 bg-white rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors duration-200">
-                                        {{-- berikan table isinya $submission-> submmission,file_path, status, score, user->name --}}
-                                        <table class=" border-collapse border border-gray-200">
-                                            <tr>
-                                                <td class="border border-gray-200 p-2">Submission</td>
-                                                <td class="border border-gray-200 p-2">File Path</td>
-                                                <td class="border border-gray-200 p-2">Status</td>
-                                                <td class="border border-gray-200 p-2">Score</td>
-                                                <td class="border border-gray-200 p-2">User</td>
-                                                <td class="border border-gray-200 p-2">Tanggal Submit</td>
-                                                <td class="border border-gray-200 p-2">Action</td>
-                                            </tr>
-                                            @foreach($lesson->submissions as $submission)
-                                            <tr>
-                                                <td class="border border-gray-200 p-2">{{ $submission->submission }}</td>
-                                                <td class="border border-gray-200 p-2"><a href="{{ asset('storage/' . $submission->file_path) }}" target="_blank">View File</a></td>
-                                                <td class="border border-gray-200 p-2">{{ $submission->status }}</td>
-                                                <td class="border border-gray-200 p-2">{{ $submission->score }}</td>
-                                                <td class="border border-gray-200 p-2">{{ $submission->user->name }}</td>
-                                                <td class="border border-gray-200 p-2">{{ $submission->created_at->format('d-m-Y H:i:s') }}</td>
-                                                <td class="border border-gray-200 p-2">
-                                                    <button onclick="openScoreModal({{ $submission->id }})"
-                                                            class="inline-flex items-center px-3 py-1.5 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors duration-200">
-                                                        <i class="fas fa-star mr-2"></i> Score
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            @endforeach
+                                <div class="flex items-center justify-between py-3 px-4 bg-white rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors duration-200">
+                                    <div class="overflow-x-auto w-full">
+                                        <table class="min-w-full border-collapse border border-gray-200">
+                                            <thead>
+                                                <tr>
+                                                    <th class="border border-gray-200 p-2 bg-gray-50 text-left">Submission</th>
+                                                    <th class="border border-gray-200 p-2 bg-gray-50 text-left">File Path</th>
+                                                    <th class="border border-gray-200 p-2 bg-gray-50 text-left">Status</th>
+                                                    <th class="border border-gray-200 p-2 bg-gray-50 text-left">Score</th>
+                                                    <th class="border border-gray-200 p-2 bg-gray-50 text-left">User</th>
+                                                    <th class="border border-gray-200 p-2 bg-gray-50 text-left">Tanggal Submit</th>
+                                                    <th class="border border-gray-200 p-2 bg-gray-50 text-left">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($lesson->submissions as $submission)
+                                                <tr>
+                                                    <td class="border border-gray-200 p-2 whitespace-nowrap"><a href="{{ $submission->submission }}" class="text-indigo-500 hover:text-indigo-600" target="_blank">Link Submission</a></td>
+                                                    <td class="border border-gray-200 p-2 whitespace-nowrap"><a href="{{ asset('storage/' . $submission->file_path) }}" target="_blank">View File</a></td>
+                                                    <td class="border border-gray-200 p-2 whitespace-nowrap">{{ $submission->status }}</td>
+                                                    <td class="border border-gray-200 p-2 whitespace-nowrap">{{ $submission->score }}</td>
+                                                    <td class="border border-gray-200 p-2 whitespace-nowrap">{{ $submission->user->name }}</td>
+                                                    <td class="border border-gray-200 p-2 whitespace-nowrap">{{ $submission->created_at->format('d-m-Y H:i:s') }}</td>
+                                                    <td class="border border-gray-200 p-2 whitespace-nowrap">
+                                                        <button onclick="openScoreModal({{ $submission->id }})"
+                                                                class="inline-flex items-center px-3 py-1.5 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors duration-200">
+                                                            <i class="fas fa-star mr-2"></i> Score
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
                                         </table>
                                     </div>
+                                </div>
 
-                                    <!-- Score Modal -->
-                                    <div id="scoreModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
-                                        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-                                            <div class="mt-3">
-                                                <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">Score Submission</h3>
-                                                <form method="POST" id="scoreForm" class="space-y-4">
-                                                    @csrf
-                                                    @method('PUT')
-                                                    <input type="hidden" id="submissionId" name="submissionId">
-                                                    <div>
-                                                        <label for="score" class="block text-sm font-medium text-gray-700">Score (0-100)</label>
-                                                        <input type="number" id="score" name="score" min="0" max="100" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                                    </div>
-                                                    <div>
-                                                        <label for="feedback" class="block text-sm font-medium text-gray-700">Feedback</label>
-                                                        <textarea id="feedback" name="feedback" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
-                                                    </div>
-                                                    <div>
-                                                        <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
-                                                        <select id="status" name="status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                                            <option value="reviewed">Reviewed</option>
-                                                            <option value="approved">Approved</option>
-                                                            <option value="rejected">Rejected</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="flex justify-end space-x-3">
-                                                        <button type="button" onclick="closeScoreModal()" class="px-4 py-2 bg-gray-200 text-gray-800 text-sm font-medium rounded-lg hover:bg-gray-300 transition-colors duration-200">
-                                                            Cancel
-                                                        </button>
-                                                        <button type="submit" class="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors duration-200">
-                                                            Submit Score
-                                                        </button>
-                                                    </div>
-                                                </form>
-                                            </div>
+                                <!-- Score Modal -->
+                                <div id="scoreModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
+                                    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                                        <div class="mt-3">
+                                            <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">Score Submission</h3>
+                                            <form method="POST" id="scoreForm" class="space-y-4">
+                                                @csrf
+                                                @method('PUT')
+                                                <input type="hidden" id="submissionId" name="submissionId">
+                                                <div>
+                                                    <label for="score" class="block text-sm font-medium text-gray-700">Score (0-100)</label>
+                                                    <input type="number" id="score" name="score" min="0" max="100" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                </div>
+                                                <div>
+                                                    <label for="feedback" class="block text-sm font-medium text-gray-700">Feedback</label>
+                                                    <textarea id="feedback" name="feedback" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
+                                                </div>
+                                                <div>
+                                                    <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+                                                    <select id="status" name="status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                        <option value="reviewed">Reviewed</option>
+                                                        <option value="approved">Approved</option>
+                                                        <option value="rejected">Rejected</option>
+                                                    </select>
+                                                </div>
+                                                <div class="flex justify-end space-x-3">
+                                                    <button type="button" onclick="closeScoreModal()" class="px-4 py-2 bg-gray-200 text-gray-800 text-sm font-medium rounded-lg hover:bg-gray-300 transition-colors duration-200">
+                                                        Cancel
+                                                    </button>
+                                                    <button type="submit" class="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors duration-200">
+                                                        Submit Score
+                                                    </button>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
+                                </div>
 
                             </div>
                         @endif

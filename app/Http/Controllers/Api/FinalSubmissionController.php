@@ -20,7 +20,11 @@ class FinalSubmissionController extends Controller
     }
     public function allPublished()
     {
-        $submissions = FinalSubmission::with('user')->where('is_published', true)->whereNotNull('file_path')->get();
+        $submissions = FinalSubmission::with('user')
+        ->where('is_published', true)
+        ->whereNotNull('file_path')
+        ->where('status', 'approved')
+        ->get();
         return $this->successResponse($submissions);
     }
     public function getByLessonId(Request $request, $lessonId)

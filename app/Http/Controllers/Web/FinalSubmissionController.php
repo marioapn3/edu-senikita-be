@@ -141,12 +141,7 @@ class FinalSubmissionController extends Controller
             'file_path' => 'nullable|file|max:10240',
         ]);
 
-        // $lesson = Lesson::find($request->lesson_id);
-        // if($lesson->submission_type == 'file'){
-        //     if(!$request->hasFile('file_path')){
-        //         $validator->errors()->add('file_path', 'File is required');
-        //     }
-        // }
+
 
         // ambil 1 data lesson random di database
         $lesson = Lesson::inRandomOrder()->first();
@@ -156,6 +151,7 @@ class FinalSubmissionController extends Controller
         $submission->lesson_id = $lesson->id;
         $submission->is_published = True;
         $submission->type = 'file';
+        $submission->status = 'approved';
         if ($request->hasFile('file_path')) {
             $path = $this->uploadService->upload($request->file('file_path'), 'final-submissions');
             $submission->file_path = $path;
