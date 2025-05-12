@@ -89,6 +89,12 @@ Route::middleware(['auth'])->group(function () {
 
     });
 
+    Route::prefix('gallery')->group(function () {
+        Route::get('/', [FinalSubmissionController::class, 'index'])->name('gallery.index');
+        Route::post('/', [FinalSubmissionController::class, 'store'])->name('gallery.store');
+        Route::delete('/{id}', [FinalSubmissionController::class, 'destroy'])->name('gallery.destroy');
+    });
+
     Route::post('/logout', [AuthenticationController::class, 'logout'])->name('logout');
 });
 

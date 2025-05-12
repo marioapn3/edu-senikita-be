@@ -8,6 +8,7 @@ use App\Models\Course;
 use App\Models\Enrollment;
 use App\Models\FinalSubmission;
 use App\Models\Lesson;
+use App\Services\UploadService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,6 +19,13 @@ use Spatie\PdfToImage\Pdf as PdfToImage;
 
 class FinalSubmissionController extends Controller
 {
+    protected $uploadService;
+
+    public function __construct(UploadService $uploadService)
+    {
+        $this->uploadService = $uploadService;
+    }
+
     public function score(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
@@ -119,5 +127,49 @@ class FinalSubmissionController extends Controller
         }
 
         return redirect()->back()->with('success', 'Final submission updated successfully');
+    }
+
+    public function index()
+    {
+        $finalSubmissions = FinalSubmission::paginate(10);
+        return view('pages.dashboard.gallery.index', compact('finalSubmissions'));
+    }
+
+   public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'file_path' => 'nullable|file|max:10240',
+        ]);
+
+        // $lesson = Lesson::find($request->lesson_id);
+        // if($lesson->submission_type == 'file'){
+        //     if(!$request->hasFile('file_path')){
+        //         $validator->errors()->add('file_path', 'File is required');
+        //     }
+        // }
+
+        // ambil 1 data lesson random di database
+        $lesson = Lesson::inRandomOrder()->first();
+
+        $submission = new FinalSubmission();
+        $submission->user_id = Auth::id();
+        $submission->lesson_id = $lesson->id;
+        $submission->is_published = True;
+        $submission->type = 'file';
+        if ($request->hasFile('file_path')) {
+            $path = $this->uploadService->upload($request->file('file_path'), 'final-submissions');
+            $submission->file_path = $path;
+        }
+
+        $submission->save();
+
+        return redirect()->back()->with('success', 'Final submission created successfully');
+    }
+
+    public function destroy($id)
+    {
+        $submission = FinalSubmission::find($id);
+        $submission->delete();
+        return redirect()->back()->with('success', 'Final submission deleted successfully');
     }
 }

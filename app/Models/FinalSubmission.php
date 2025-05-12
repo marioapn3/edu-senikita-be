@@ -32,4 +32,12 @@ class FinalSubmission extends Model
     {
         return $this->belongsTo(Lesson::class);
     }
+
+    public function getFilePathAttribute()
+    {
+        return isset($this->attributes['file_path'])
+            ? asset('storage/' . $this->attributes['file_path'])
+            : null;
+    }
+
 }
